@@ -195,73 +195,159 @@ const state = {
 const normalize = (value) => value.replace(/\s+/g, " ").trim().toLowerCase();
 
 const audio = {
-  ctx: null,
+  clips: null,
   unlocked: false,
-  getContext() {
-    if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-    if (this.ctx.state === "suspended") this.ctx.resume();
-    return this.ctx;
+  notice: null,
+  prepare() {
+    if (this.clips) return;
+    const definitions = {
+      click: [[520, 0.05, "square", 0.24]],
+      start: [[392, 0.08, "triangle", 0.34], [523.25, 0.08, "triangle", 0.34], [659.25, 0.08, "triangle", 0.34], [783.99, 0.12, "triangle", 0.34]],
+      correct: [[523.25, 0.09, "triangle", 0.36], [659.25, 0.09, "triangle", 0.36], [783.99, 0.1, "triangle", 0.36], [1046.5, 0.16, "triangle", 0.34]],
+      wrong: [[220, 0.14, "saw", 0.38], [164.81, 0.22, "saw", 0.34]],
+      tick: [[880, 0.055, "square", 0.22]],
+      finishGood: [[392, 0.1, "triangle", 0.34], [493.88, 0.1, "triangle", 0.34], [587.33, 0.12, "triangle", 0.34], [783.99, 0.18, "triangle", 0.34]],
+      finishLow: [[349.23, 0.13, "triangle", 0.3], [293.66, 0.13, "triangle", 0.3], [261.63, 0.2, "triangle", 0.28]]
+    };
+    this.clips = Object.fromEntries(
+      Object.entries(definitions).map(([name, notes]) => {
+        const clip = new Audio(makeWavUrl(notes));
+        clip.preload = "auto";
+        clip.volume = 1;
+        return [name, clip];
+      })
+    );
   },
   unlock() {
-    if (this.unlocked || !state.soundOn) return;
-    const ctx = this.getContext();
-    const buffer = ctx.createBuffer(1, 1, 22050);
-    const source = ctx.createBufferSource();
-    source.buffer = buffer;
-    source.connect(ctx.destination);
-    source.start(0);
-    this.unlocked = true;
+    if (!state.soundOn || this.unlocked) return;
+    this.prepare();
+    const clip = this.clips.click;
+    clip.muted = true;
+    clip.currentTime = 0;
+    const playAttempt = clip.play();
+    if (!playAttempt) {
+      clip.pause();
+      clip.muted = false;
+      this.unlocked = true;
+      return;
+    }
+    playAttempt
+      .then(() => {
+        clip.pause();
+        clip.currentTime = 0;
+        clip.muted = false;
+        this.unlocked = true;
+        this.hideNotice();
+      })
+      .catch(() => this.showNotice());
   },
-  tone(frequency, start, duration, type = "sine", gain = 0.08) {
+  play(name) {
     if (!state.soundOn) return;
-    const ctx = this.getContext();
-    const oscillator = ctx.createOscillator();
-    const volume = ctx.createGain();
-    oscillator.type = type;
-    oscillator.frequency.setValueAtTime(frequency, ctx.currentTime + start);
-    volume.gain.setValueAtTime(0.0001, ctx.currentTime + start);
-    volume.gain.exponentialRampToValueAtTime(gain, ctx.currentTime + start + 0.01);
-    volume.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + start + duration);
-    oscillator.connect(volume);
-    volume.connect(ctx.destination);
-    oscillator.start(ctx.currentTime + start);
-    oscillator.stop(ctx.currentTime + start + duration + 0.02);
+    this.prepare();
+    const source = this.clips[name];
+    if (!source) return;
+    const clip = source.cloneNode();
+    clip.volume = 1;
+    const playAttempt = clip.play();
+    if (playAttempt) playAttempt.catch(() => this.showNotice());
   },
   vibrate(pattern) {
     if (state.soundOn && navigator.vibrate) navigator.vibrate(pattern);
   },
+  showNotice() {
+    if (!this.notice) {
+      this.notice = document.createElement("button");
+      this.notice.className = "sound-notice";
+      this.notice.type = "button";
+      this.notice.textContent = "Tap to enable sound";
+      this.notice.addEventListener("click", () => {
+        this.unlocked = false;
+        this.unlock();
+        this.play("click");
+      });
+      document.body.append(this.notice);
+    }
+    this.notice.classList.add("visible");
+  },
+  hideNotice() {
+    if (this.notice) this.notice.classList.remove("visible");
+  },
   click() {
-    this.tone(520, 0, 0.045, "square", 0.035);
+    this.play("click");
   },
   start() {
     this.unlock();
-    [392, 523.25, 659.25, 783.99].forEach((note, index) => this.tone(note, index * 0.07, 0.08, "triangle", 0.07));
+    this.play("start");
     this.vibrate(18);
   },
   correct() {
-    [523.25, 659.25, 783.99, 1046.5].forEach((note, index) => this.tone(note, index * 0.055, 0.11, "triangle", 0.08));
+    this.play("correct");
     this.vibrate([20, 35, 20]);
   },
   wrong() {
-    this.tone(220, 0, 0.13, "sawtooth", 0.07);
-    this.tone(164.81, 0.11, 0.18, "sawtooth", 0.06);
+    this.play("wrong");
     this.vibrate(90);
   },
   tick() {
-    this.tone(880, 0, 0.045, "square", 0.035);
+    this.play("tick");
     this.vibrate(10);
   },
   finish(percent) {
-    if (percent >= 70) {
-      [392, 493.88, 587.33, 783.99].forEach((note, index) => this.tone(note, index * 0.08, 0.13, "triangle", 0.075));
-    } else {
-      [349.23, 293.66, 261.63].forEach((note, index) => this.tone(note, index * 0.11, 0.14, "triangle", 0.06));
-    }
+    this.play(percent >= 70 ? "finishGood" : "finishLow");
   }
 };
 
+function makeWavUrl(notes) {
+  const sampleRate = 44100;
+  const gapSamples = Math.floor(sampleRate * 0.025);
+  const samples = [];
+
+  notes.forEach(([frequency, duration, type, volume]) => {
+    const sampleCount = Math.floor(sampleRate * duration);
+    for (let i = 0; i < sampleCount; i += 1) {
+      const t = i / sampleRate;
+      const phase = (t * frequency) % 1;
+      let wave = Math.sin(2 * Math.PI * frequency * t);
+      if (type === "square") wave = phase < 0.5 ? 1 : -1;
+      if (type === "saw") wave = 2 * phase - 1;
+      if (type === "triangle") wave = 1 - 4 * Math.abs(Math.round(phase - 0.25) - (phase - 0.25));
+      const attack = Math.min(1, i / Math.max(1, sampleRate * 0.01));
+      const release = Math.min(1, (sampleCount - i) / Math.max(1, sampleRate * 0.04));
+      samples.push(wave * volume * Math.min(attack, release));
+    }
+    for (let i = 0; i < gapSamples; i += 1) samples.push(0);
+  });
+
+  const buffer = new ArrayBuffer(44 + samples.length * 2);
+  const view = new DataView(buffer);
+  writeString(view, 0, "RIFF");
+  view.setUint32(4, 36 + samples.length * 2, true);
+  writeString(view, 8, "WAVE");
+  writeString(view, 12, "fmt ");
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, 1, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * 2, true);
+  view.setUint16(32, 2, true);
+  view.setUint16(34, 16, true);
+  writeString(view, 36, "data");
+  view.setUint32(40, samples.length * 2, true);
+
+  samples.forEach((sample, index) => {
+    const value = Math.max(-1, Math.min(1, sample));
+    view.setInt16(44 + index * 2, value < 0 ? value * 0x8000 : value * 0x7fff, true);
+  });
+
+  return URL.createObjectURL(new Blob([view], { type: "audio/wav" }));
+}
+
+function writeString(view, offset, value) {
+  for (let i = 0; i < value.length; i += 1) view.setUint8(offset + i, value.charCodeAt(i));
+}
+
 ["pointerdown", "touchstart", "keydown"].forEach((eventName) => {
-  window.addEventListener(eventName, () => audio.unlock(), { once: true, passive: true });
+  window.addEventListener(eventName, () => audio.unlock(), { once: true });
 });
 
 function topicFor(block) {
