@@ -429,6 +429,41 @@ select {
   background: rgba(255, 90, 122, 0.14);
 }
 
+.match-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.match-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.72fr);
+  gap: 12px;
+  align-items: center;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  background: var(--panel-2);
+  padding: 14px;
+}
+
+.match-row span {
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.match-row select {
+  width: 100%;
+}
+
+.match-row.correct {
+  border-color: var(--good);
+  background: rgba(29, 220, 131, 0.16);
+}
+
+.match-row.wrong {
+  border-color: var(--bad);
+  background: rgba(255, 90, 122, 0.14);
+}
+
 .feedback {
   margin-top: 20px;
   border-left: 4px solid var(--accent-2);
@@ -556,6 +591,10 @@ select {
   .answer-btn span {
     width: 36px;
     height: 36px;
+  }
+
+  .match-row {
+    grid-template-columns: 1fr;
   }
 
   .sound-toggle {

@@ -68,6 +68,84 @@ const answerKey = {
   72: ["Public"]
 };
 
+const matchingQuestions = {
+  37: {
+    targets: [
+      "A company has a headquarters and four remote locations. The headquarters site will require more bandwidth than the four remote sites.",
+      "A company requires higher download speeds than upload speeds and wants to use existing phone lines.",
+      "A company would like guaranteed bandwidth using a point-to-point link that requires minimal expertise to install and maintain.",
+      "A teleworker would like to bundle the Internet connection with other phone and TV services.",
+      "A multisite college wants to connect using Ethernet technology between the sites."
+    ],
+    options: ["cable", "DSL", "Frame Relay", "MetroE", "T1", "VSAT"],
+    answers: {
+      "A company has a headquarters and four remote locations. The headquarters site will require more bandwidth than the four remote sites.": "Frame Relay",
+      "A company requires higher download speeds than upload speeds and wants to use existing phone lines.": "DSL",
+      "A company would like guaranteed bandwidth using a point-to-point link that requires minimal expertise to install and maintain.": "T1",
+      "A teleworker would like to bundle the Internet connection with other phone and TV services.": "cable",
+      "A multisite college wants to connect using Ethernet technology between the sites.": "MetroE"
+    }
+  },
+  38: {
+    targets: ["Inside global", "Inside local", "Outside global"],
+    options: ["10.130.5.76", "203.0.113.5", "192.0.2.1"],
+    answers: {
+      "Inside global": "192.0.2.1",
+      "Inside local": "10.130.5.76",
+      "Outside global": "203.0.113.5"
+    }
+  },
+  58: {
+    targets: [
+      "devices that put data on the local loop",
+      "customer devices that pass the data from a customer network or host computer for transmission over the WAN",
+      "point that is established in a building or complex to separate customer equipment from service provider equipment",
+      "devices and inside wiring located on the enterprise edge and which connect to a carrier link"
+    ],
+    options: ["data terminal equipment", "demarcation point", "customer premises equipment", "data communications equipment"],
+    answers: {
+      "devices that put data on the local loop": "data communications equipment",
+      "customer devices that pass the data from a customer network or host computer for transmission over the WAN": "data terminal equipment",
+      "point that is established in a building or complex to separate customer equipment from service provider equipment": "demarcation point",
+      "devices and inside wiring located on the enterprise edge and which connect to a carrier link": "customer premises equipment"
+    }
+  },
+  60: {
+    targets: ["step 1", "step 2", "step 3", "step 4", "step 5"],
+    options: [
+      "R1 replaces the address 192.168.10.10 with a translated inside global address.",
+      "R1 checks the NAT configuration to determine if this packet should be translated.",
+      "R1 selects an available global address from the dynamic address pool.",
+      "The host sends packets that request a connection to the server at the address 209.165.200.254",
+      "If there is no translation entry for this IP address, R1 determines that the source address 192.168.10.10 must be translated"
+    ],
+    answers: {
+      "step 1": "The host sends packets that request a connection to the server at the address 209.165.200.254",
+      "step 2": "R1 checks the NAT configuration to determine if this packet should be translated.",
+      "step 3": "If there is no translation entry for this IP address, R1 determines that the source address 192.168.10.10 must be translated",
+      "step 4": "R1 selects an available global address from the dynamic address pool.",
+      "step 5": "R1 replaces the address 192.168.10.10 with a translated inside global address."
+    }
+  },
+  62: {
+    targets: ["step 3", "step 2", "step 4", "step 1", "step 5"],
+    options: [
+      "R1 checks the NAT configuration to determine if this packet should be translated.",
+      "R1 selects an available global address from the dynamic address pool.",
+      "If there is no translation entry for this IP address, R1 determines that the source address 192.168.10.10 must be translated.",
+      "The host sends packets that request a connection to the server at the address 209.165.200.254.",
+      "R1 replaces the address 192.168.10.10 with a translated inside global address."
+    ],
+    answers: {
+      "step 3": "If there is no translation entry for this IP address, R1 determines that the source address 192.168.10.10 must be translated.",
+      "step 2": "R1 checks the NAT configuration to determine if this packet should be translated.",
+      "step 4": "R1 selects an available global address from the dynamic address pool.",
+      "step 1": "The host sends packets that request a connection to the server at the address 209.165.200.254.",
+      "step 5": "R1 replaces the address 192.168.10.10 with a translated inside global address."
+    }
+  }
+};
+
 const els = {
   startScreen: document.querySelector("#startScreen"),
   quizScreen: document.querySelector("#quizScreen"),
@@ -118,10 +196,21 @@ const normalize = (value) => value.replace(/\s+/g, " ").trim().toLowerCase();
 
 const audio = {
   ctx: null,
+  unlocked: false,
   getContext() {
     if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
     if (this.ctx.state === "suspended") this.ctx.resume();
     return this.ctx;
+  },
+  unlock() {
+    if (this.unlocked || !state.soundOn) return;
+    const ctx = this.getContext();
+    const buffer = ctx.createBuffer(1, 1, 22050);
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+    source.connect(ctx.destination);
+    source.start(0);
+    this.unlocked = true;
   },
   tone(frequency, start, duration, type = "sine", gain = 0.08) {
     if (!state.soundOn) return;
@@ -138,21 +227,29 @@ const audio = {
     oscillator.start(ctx.currentTime + start);
     oscillator.stop(ctx.currentTime + start + duration + 0.02);
   },
+  vibrate(pattern) {
+    if (state.soundOn && navigator.vibrate) navigator.vibrate(pattern);
+  },
   click() {
     this.tone(520, 0, 0.045, "square", 0.035);
   },
   start() {
+    this.unlock();
     [392, 523.25, 659.25, 783.99].forEach((note, index) => this.tone(note, index * 0.07, 0.08, "triangle", 0.07));
+    this.vibrate(18);
   },
   correct() {
     [523.25, 659.25, 783.99, 1046.5].forEach((note, index) => this.tone(note, index * 0.055, 0.11, "triangle", 0.08));
+    this.vibrate([20, 35, 20]);
   },
   wrong() {
     this.tone(220, 0, 0.13, "sawtooth", 0.07);
     this.tone(164.81, 0.11, 0.18, "sawtooth", 0.06);
+    this.vibrate(90);
   },
   tick() {
     this.tone(880, 0, 0.045, "square", 0.035);
+    this.vibrate(10);
   },
   finish(percent) {
     if (percent >= 70) {
@@ -162,6 +259,10 @@ const audio = {
     }
   }
 };
+
+["pointerdown", "touchstart", "keydown"].forEach((eventName) => {
+  window.addEventListener(eventName, () => audio.unlock(), { once: true, passive: true });
+});
 
 function topicFor(block) {
   if (/\bVPN|IPsec|IPsec|GRE|SSL|TLS|ASA|HMAC|Diffie-Hellman|IKE|MPLS VPN\b/i.test(block)) return "VPN";
@@ -197,7 +298,8 @@ function parseQuestions(source) {
 
       const question = cleanLines.join("\n").trim() || beforeExplanation.trim();
       const answers = answerKey[number] || [];
-      const gradable = answers.length > 0 && filteredChoices.length > 0;
+      const matching = matchingQuestions[number] || null;
+      const gradable = Boolean(matching) || (answers.length > 0 && filteredChoices.length > 0);
 
       return {
         number,
@@ -205,6 +307,7 @@ function parseQuestions(source) {
         question,
         choices: filteredChoices,
         answers,
+        matching,
         explanation,
         gradable,
         raw: block
@@ -278,7 +381,7 @@ function renderQuestion() {
   els.streak.textContent = state.streak;
   els.progressBar.style.width = `${(state.index / state.session.length) * 100}%`;
   els.topicBadge.textContent = q.topic;
-  els.multiBadge.textContent = q.answers.length > 1 ? `Choose ${q.answers.length}` : q.gradable ? "Choose 1" : "Review";
+  els.multiBadge.textContent = q.matching ? "Match" : q.answers.length > 1 ? `Choose ${q.answers.length}` : q.gradable ? "Choose 1" : "Review";
   els.questionText.textContent = q.question;
   els.answers.innerHTML = "";
 
@@ -294,6 +397,12 @@ function renderQuestion() {
     return;
   }
 
+  if (q.matching) {
+    renderMatchingQuestion(q);
+    startTimer();
+    return;
+  }
+
   q.choices.forEach((choice, index) => {
     const button = document.createElement("button");
     button.className = "answer-btn";
@@ -305,6 +414,46 @@ function renderQuestion() {
   });
 
   startTimer();
+}
+
+function renderMatchingQuestion(q) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "match-grid";
+  const shuffledOptions = shuffle(q.matching.options);
+
+  q.matching.targets.forEach((target) => {
+    const row = document.createElement("label");
+    row.className = "match-row";
+    const text = document.createElement("span");
+    text.textContent = target;
+    const select = document.createElement("select");
+    select.dataset.target = target;
+    select.innerHTML = `<option value="">Choose match</option>${shuffledOptions.map((option) => `<option value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("")}`;
+    select.addEventListener("change", () => {
+      audio.click();
+      const allSelected = [...wrapper.querySelectorAll("select")].every((item) => item.value);
+      if (allSelected) answerQuestion(readMatchingSelection(wrapper), false);
+    });
+    row.append(text, select);
+    wrapper.append(row);
+  });
+
+  els.answers.append(wrapper);
+}
+
+function readMatchingSelection(wrapper) {
+  return [...wrapper.querySelectorAll("select")].map((select) => ({
+    target: select.dataset.target,
+    answer: select.value
+  }));
+}
+
+function escapeHtml(value) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 function selectAnswer(choice, button) {
@@ -337,23 +486,32 @@ function sameAnswers(selected, correct) {
   return picked.every((answer, index) => answer === expected[index]);
 }
 
+function sameMatching(selected, matching) {
+  if (!selected || selected.length !== matching.targets.length) return false;
+  return selected.every((item) => normalize(item.answer) === normalize(matching.answers[item.target]));
+}
+
 function answerQuestion(selected, timedOut) {
   if (state.answered) return;
   stopTimer();
   state.answered = true;
 
   const q = state.session[state.index];
-  const correct = sameAnswers(selected, q.answers);
+  const correct = q.matching ? sameMatching(selected, q.matching) : sameAnswers(selected, q.answers);
   const buttons = [...els.answers.querySelectorAll(".answer-btn")];
 
-  buttons.forEach((button) => {
-    const text = button.querySelector("strong").textContent;
-    const isCorrect = q.answers.some((answer) => normalize(answer) === normalize(text));
-    const wasPicked = selected?.some((answer) => normalize(answer) === normalize(text));
-    if (isCorrect) button.classList.add("correct");
-    if (wasPicked && !isCorrect) button.classList.add("wrong");
-    button.disabled = true;
-  });
+  if (q.matching) {
+    markMatchingQuestion(q, selected || []);
+  } else {
+    buttons.forEach((button) => {
+      const text = button.querySelector("strong").textContent;
+      const isCorrect = q.answers.some((answer) => normalize(answer) === normalize(text));
+      const wasPicked = selected?.some((answer) => normalize(answer) === normalize(text));
+      if (isCorrect) button.classList.add("correct");
+      if (wasPicked && !isCorrect) button.classList.add("wrong");
+      button.disabled = true;
+    });
+  }
 
   if (correct) {
     audio.correct();
@@ -372,10 +530,27 @@ function answerQuestion(selected, timedOut) {
   els.feedback.classList.remove("hidden");
   els.feedback.innerHTML = `
     <strong>${correct ? "Correct" : timedOut ? "Time's up" : "Not quite"}</strong>
-    <p><b>Answer:</b> ${q.answers.join(" | ")}</p>
+    <p><b>Answer:</b> ${formatCorrectAnswer(q)}</p>
     <p>${q.explanation}</p>
   `;
   els.nextBtn.disabled = false;
+}
+
+function markMatchingQuestion(q, selected) {
+  els.answers.querySelectorAll(".match-row").forEach((row) => {
+    const select = row.querySelector("select");
+    const target = select.dataset.target;
+    const picked = selected.find((item) => item.target === target)?.answer || "";
+    const right = q.matching.answers[target];
+    row.classList.toggle("correct", normalize(picked) === normalize(right));
+    row.classList.toggle("wrong", normalize(picked) !== normalize(right));
+    select.disabled = true;
+  });
+}
+
+function formatCorrectAnswer(q) {
+  if (!q.matching) return q.answers.join(" | ");
+  return q.matching.targets.map((target) => `${target} => ${q.matching.answers[target]}`).join(" | ");
 }
 
 function nextQuestion() {
@@ -409,7 +584,7 @@ function finishQuiz() {
     item.innerHTML = `
       <span>${q.topic} • Question ${q.number}</span>
       <h3></h3>
-      <p><b>Answer:</b> ${q.answers.join(" | ") || "Review item"}</p>
+      <p><b>Answer:</b> ${formatCorrectAnswer(q) || "Review item"}</p>
       <p></p>
     `;
     item.querySelector("h3").textContent = q.question;
