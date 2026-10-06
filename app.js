@@ -75,6 +75,7 @@ const els = {
   questionCount: document.querySelector("#questionCount"),
   timerMode: document.querySelector("#timerMode"),
   startBtn: document.querySelector("#startBtn"),
+  soundToggle: document.querySelector("#soundToggle"),
   quitBtn: document.querySelector("#quitBtn"),
   nextBtn: document.querySelector("#nextBtn"),
   restartBtn: document.querySelector("#restartBtn"),
@@ -109,10 +110,58 @@ const state = {
   topic: "all",
   timerSeconds: 30,
   tick: null,
-  timeLeft: 30
+  timeLeft: 30,
+  soundOn: true
 };
 
 const normalize = (value) => value.replace(/\s+/g, " ").trim().toLowerCase();
+
+const audio = {
+  ctx: null,
+  getContext() {
+    if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (this.ctx.state === "suspended") this.ctx.resume();
+    return this.ctx;
+  },
+  tone(frequency, start, duration, type = "sine", gain = 0.08) {
+    if (!state.soundOn) return;
+    const ctx = this.getContext();
+    const oscillator = ctx.createOscillator();
+    const volume = ctx.createGain();
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(frequency, ctx.currentTime + start);
+    volume.gain.setValueAtTime(0.0001, ctx.currentTime + start);
+    volume.gain.exponentialRampToValueAtTime(gain, ctx.currentTime + start + 0.01);
+    volume.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + start + duration);
+    oscillator.connect(volume);
+    volume.connect(ctx.destination);
+    oscillator.start(ctx.currentTime + start);
+    oscillator.stop(ctx.currentTime + start + duration + 0.02);
+  },
+  click() {
+    this.tone(520, 0, 0.045, "square", 0.035);
+  },
+  start() {
+    [392, 523.25, 659.25, 783.99].forEach((note, index) => this.tone(note, index * 0.07, 0.08, "triangle", 0.07));
+  },
+  correct() {
+    [523.25, 659.25, 783.99, 1046.5].forEach((note, index) => this.tone(note, index * 0.055, 0.11, "triangle", 0.08));
+  },
+  wrong() {
+    this.tone(220, 0, 0.13, "sawtooth", 0.07);
+    this.tone(164.81, 0.11, 0.18, "sawtooth", 0.06);
+  },
+  tick() {
+    this.tone(880, 0, 0.045, "square", 0.035);
+  },
+  finish(percent) {
+    if (percent >= 70) {
+      [392, 493.88, 587.33, 783.99].forEach((note, index) => this.tone(note, index * 0.08, 0.13, "triangle", 0.075));
+    } else {
+      [349.23, 293.66, 261.63].forEach((note, index) => this.tone(note, index * 0.11, 0.14, "triangle", 0.06));
+    }
+  }
+};
 
 function topicFor(block) {
   if (/\bVPN|IPsec|IPsec|GRE|SSL|TLS|ASA|HMAC|Diffie-Hellman|IKE|MPLS VPN\b/i.test(block)) return "VPN";
@@ -188,6 +237,7 @@ function buildSession(source = null) {
 }
 
 function startQuiz(source = null) {
+  audio.start();
   buildSession(source);
   showOnly(els.quizScreen);
   renderQuestion();
@@ -207,6 +257,7 @@ function startTimer() {
   state.tick = setInterval(() => {
     state.timeLeft -= 1;
     els.timer.textContent = state.timeLeft;
+    if (state.timeLeft <= 5 && state.timeLeft > 0) audio.tick();
     if (state.timeLeft <= 0) answerQuestion(null, true);
   }, 1000);
 }
@@ -259,6 +310,7 @@ function renderQuestion() {
 function selectAnswer(choice, button) {
   const q = state.session[state.index];
   if (state.answered) return;
+  audio.click();
 
   if (q.answers.length > 1) {
     if (state.selected.has(choice)) {
@@ -304,11 +356,13 @@ function answerQuestion(selected, timedOut) {
   });
 
   if (correct) {
+    audio.correct();
     const bonus = state.streak * 50;
     const speed = state.timerSeconds ? Math.max(0, state.timeLeft * 5) : 0;
     state.score += 500 + bonus + speed;
     state.streak += 1;
   } else {
+    audio.wrong();
     state.missed.push({ ...q, picked: selected || [] });
     state.streak = 0;
   }
@@ -341,6 +395,7 @@ function finishQuiz() {
   const percent = gradable ? Math.round((correct / gradable) * 100) : 0;
 
   showOnly(els.resultsScreen);
+  audio.finish(percent);
   els.finalScore.textContent = `${percent}%`;
   els.finalTitle.textContent = percent >= 85 ? "Clean run." : percent >= 70 ? "Almost there." : "Good review set.";
   els.finalDetails.textContent = `${correct}/${gradable} scored questions correct • ${state.score} points`;
@@ -372,12 +427,25 @@ document.querySelectorAll(".topic-chip").forEach((button) => {
 });
 
 els.startBtn.addEventListener("click", () => startQuiz());
+els.soundToggle.addEventListener("click", () => {
+  state.soundOn = !state.soundOn;
+  els.soundToggle.setAttribute("aria-pressed", String(state.soundOn));
+  els.soundToggle.querySelector("strong").textContent = state.soundOn ? "Sound on" : "Sound off";
+  if (state.soundOn) audio.click();
+});
 els.quitBtn.addEventListener("click", () => {
+  audio.click();
   stopTimer();
   showOnly(els.startScreen);
 });
-els.nextBtn.addEventListener("click", nextQuestion);
-els.restartBtn.addEventListener("click", () => showOnly(els.startScreen));
+els.nextBtn.addEventListener("click", () => {
+  audio.click();
+  nextQuestion();
+});
+els.restartBtn.addEventListener("click", () => {
+  audio.click();
+  showOnly(els.startScreen);
+});
 els.retryMissedBtn.addEventListener("click", () => startQuiz(state.missed));
 
 state.allQuestions = parseQuestions(window.QUESTIONS_SOURCE || "");
