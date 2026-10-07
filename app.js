@@ -412,7 +412,7 @@ function showOnly(screen) {
 
 function buildSession(source = null) {
   let bank = source || state.allQuestions;
-  if (state.topic !== "all") bank = bank.filter((q) => q.topic === state.topic);
+  if (state.topic !== "all") bank = bank.filter((q) => q.topic === state.topic || q.module === state.topic);
 
   const requested = els.questionCount.value;
   const count = requested === "all" ? bank.length : Number(requested);
@@ -460,8 +460,8 @@ function renderQuestion() {
   els.feedback.classList.add("hidden");
   els.feedback.innerHTML = "";
   els.nextBtn.disabled = true;
-  els.nextBtn.textContent = state.index === state.session.length - 1 ? "Finish" : "Next";
-  els.topicLabel.textContent = `${q.topic} Review`;
+  els.nextBtn.textContent = "Next";
+  els.topicLabel.textContent = `${q.module || q.topic} Review`;
   els.questionProgress.textContent = `Question ${state.index + 1} of ${state.session.length}`;
   els.score.textContent = state.score;
   els.streak.textContent = state.streak;
@@ -479,6 +479,8 @@ function renderQuestion() {
     els.feedback.classList.remove("hidden");
     els.feedback.innerHTML = `<strong>Review item</strong><p>This item is shown with the exact pasted text. It was not turned into a scored question because the exhibit/matching choices were not fully available in the paste.</p>`;
     els.nextBtn.disabled = false;
+    els.nextBtn.textContent = state.index === state.session.length - 1 ? "Finish" : "Next";
+    state.answered = true;
     els.timer.textContent = "—";
     return;
   }
@@ -517,8 +519,7 @@ function renderMatchingQuestion(q) {
     select.innerHTML = `<option value="">Choose match</option>${shuffledOptions.map((option) => `<option value="${escapeHtml(option)}">${escapeHtml(option)}</option>`).join("")}`;
     select.addEventListener("change", () => {
       audio.click();
-      const allSelected = [...wrapper.querySelectorAll("select")].every((item) => item.value);
-      if (allSelected) answerQuestion(readMatchingSelection(wrapper), false);
+      syncSubmitButton();
     });
     row.append(text, select);
     wrapper.append(row);
@@ -556,13 +557,26 @@ function selectAnswer(choice, button) {
       button.classList.add("selected");
     }
 
-    if (state.selected.size === q.answers.length) {
-      answerQuestion([...state.selected], false);
-    }
+    syncSubmitButton();
     return;
   }
 
-  answerQuestion([choice], false);
+  state.selected.clear();
+  els.answers.querySelectorAll(".answer-btn").forEach((answerButton) => answerButton.classList.remove("selected"));
+  state.selected.add(choice);
+  button.classList.add("selected");
+  syncSubmitButton();
+}
+
+function syncSubmitButton() {
+  const q = state.session[state.index];
+  if (state.answered) return;
+  if (q.matching) {
+    els.nextBtn.disabled = ![...els.answers.querySelectorAll("select")].every((item) => item.value);
+    return;
+  }
+  const needed = Math.max(1, q.answers.length);
+  els.nextBtn.disabled = state.selected.size !== needed;
 }
 
 function sameAnswers(selected, correct) {
@@ -620,6 +634,7 @@ function answerQuestion(selected, timedOut) {
     <p>${q.explanation}</p>
   `;
   els.nextBtn.disabled = false;
+  els.nextBtn.textContent = state.index === state.session.length - 1 ? "Finish" : "Next";
 }
 
 function markMatchingQuestion(q, selected) {
@@ -641,6 +656,12 @@ function formatCorrectAnswer(q) {
 
 function nextQuestion() {
   if (!state.session.length) return;
+  if (!state.answered) {
+    const q = state.session[state.index];
+    const selected = q.matching ? readMatchingSelection(els.answers.querySelector(".match-grid")) : [...state.selected];
+    answerQuestion(selected, false);
+    return;
+  }
   if (state.index < state.session.length - 1) {
     state.index += 1;
     renderQuestion();
@@ -668,7 +689,7 @@ function finishQuiz() {
     const item = document.createElement("article");
     item.className = "review-card";
     item.innerHTML = `
-      <span>${q.topic} • Question ${q.number}</span>
+      <span>${q.module || q.topic} • Question ${q.number}</span>
       <h3></h3>
       <p><b>Answer:</b> ${formatCorrectAnswer(q) || "Review item"}</p>
       <p></p>
@@ -709,5 +730,5 @@ els.restartBtn.addEventListener("click", () => {
 });
 els.retryMissedBtn.addEventListener("click", () => startQuiz(state.missed));
 
-state.allQuestions = parseQuestions(window.QUESTIONS_SOURCE || "");
+state.allQuestions = window.QUESTION_BANK || parseQuestions(window.QUESTIONS_SOURCE || "");
 els.bankSize.textContent = state.allQuestions.length;
