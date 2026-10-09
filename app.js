@@ -152,6 +152,8 @@ const els = {
   resultsScreen: document.querySelector("#resultsScreen"),
   questionCount: document.querySelector("#questionCount"),
   timerMode: document.querySelector("#timerMode"),
+  fillBlankMode: document.querySelector("#fillBlankMode"),
+  definitionMode: document.querySelector("#definitionMode"),
   startBtn: document.querySelector("#startBtn"),
   soundToggle: document.querySelector("#soundToggle"),
   quitBtn: document.querySelector("#quitBtn"),
@@ -189,6 +191,7 @@ const state = {
   timerSeconds: 30,
   tick: null,
   timeLeft: 30,
+  typedAnswer: "",
   soundOn: true
 };
 
@@ -410,9 +413,85 @@ function showOnly(screen) {
   screen.classList.remove("hidden");
 }
 
-function buildSession(source = null) {
-  let bank = source || state.allQuestions;
+function filteredBaseBank() {
+  let bank = state.allQuestions;
   if (state.topic !== "all") bank = bank.filter((q) => q.topic === state.topic || q.module === state.topic);
+  return bank;
+}
+
+function buildPracticeBank() {
+  const base = filteredBaseBank();
+  const extras = [];
+
+  if (els.fillBlankMode.checked) {
+    extras.push(...base.filter(canMakeTypedQuestion).map(makeFillBlankQuestion));
+  }
+
+  if (els.definitionMode.checked) {
+    extras.push(...base.filter(canMakeDefinitionQuestion).map(makeDefinitionQuestion));
+  }
+
+  return [...base, ...extras];
+}
+
+function updateBankSize() {
+  if (!state.allQuestions.length) return;
+  els.bankSize.textContent = buildPracticeBank().length;
+}
+
+function canMakeTypedQuestion(q) {
+  return q.gradable && !q.matching && q.answers.length === 1 && q.answers[0].length <= 90;
+}
+
+function canMakeDefinitionQuestion(q) {
+  if (!canMakeTypedQuestion(q)) return false;
+  const answer = q.answers[0].trim();
+  const wordCount = answer.split(/\s+/).length;
+  if (wordCount > 5 || answer.length > 48) return false;
+  if (/[#]|access-list|Router\(|\d+\.\d+\.\d+\.\d+|\/\d+/i.test(answer)) return false;
+  return definitionClue(q).length >= 35;
+}
+
+function makeFillBlankQuestion(q) {
+  return {
+    ...q,
+    id: `${q.id || `${q.module}-${q.number}`}-fill`,
+    question: `${q.question}\n\nType the correct answer.`,
+    choices: [],
+    matching: null,
+    mode: "fill",
+    sourceMode: "Fill in the blanks"
+  };
+}
+
+function makeDefinitionQuestion(q) {
+  const answer = q.answers[0];
+  return {
+    ...q,
+    id: `${q.id || `${q.module}-${q.number}`}-term`,
+    question: `Definition of Terms\n\n${blankAnswer(definitionClue(q), answer)}`,
+    choices: [],
+    matching: null,
+    mode: "definition",
+    sourceMode: "Definition of terms"
+  };
+}
+
+function definitionClue(q) {
+  return (q.explanation || q.question)
+    .replace(/^Explanation:\s*/i, "")
+    .replace(/Topic\s+\d+(?:\.\d+)*\s*/gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function blankAnswer(text, answer) {
+  const escaped = answer.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return text.replace(new RegExp(escaped, "gi"), "_____");
+}
+
+function buildSession(source = null) {
+  const bank = source || buildPracticeBank();
 
   const requested = els.questionCount.value;
   const count = requested === "all" ? bank.length : Number(requested);
@@ -455,6 +534,7 @@ function renderQuestion() {
   stopTimer();
   const q = state.session[state.index];
   state.selected.clear();
+  state.typedAnswer = "";
   state.answered = false;
 
   els.feedback.classList.add("hidden");
@@ -467,7 +547,7 @@ function renderQuestion() {
   els.streak.textContent = state.streak;
   els.progressBar.style.width = `${(state.index / state.session.length) * 100}%`;
   els.topicBadge.textContent = q.topic;
-  els.multiBadge.textContent = q.matching ? "Match" : q.answers.length > 1 ? `Choose ${q.answers.length}` : q.gradable ? "Choose 1" : "Review";
+  els.multiBadge.textContent = q.sourceMode || (q.matching ? "Match" : q.answers.length > 1 ? `Choose ${q.answers.length}` : q.gradable ? "Choose 1" : "Review");
   els.questionText.textContent = q.question;
   els.answers.innerHTML = "";
 
@@ -491,6 +571,12 @@ function renderQuestion() {
     return;
   }
 
+  if (q.mode === "fill" || q.mode === "definition") {
+    renderTypedQuestion(q);
+    startTimer();
+    return;
+  }
+
   q.choices.forEach((choice, index) => {
     const button = document.createElement("button");
     button.className = "answer-btn";
@@ -502,6 +588,36 @@ function renderQuestion() {
   });
 
   startTimer();
+}
+
+function renderTypedQuestion(q) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "typed-answer";
+  wrapper.innerHTML = `
+    <label>
+      <span>${q.mode === "definition" ? "Term" : "Answer"}</span>
+      <input id="typedAnswerInput" type="text" autocomplete="off" spellcheck="false" placeholder="Type your answer" />
+    </label>
+  `;
+
+  const input = wrapper.querySelector("input");
+  input.addEventListener("input", () => {
+    state.typedAnswer = input.value;
+    syncSubmitButton();
+  });
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" && !els.nextBtn.disabled) {
+      event.preventDefault();
+      nextQuestion();
+    }
+  });
+
+  els.answers.append(wrapper);
+  try {
+    input.focus({ preventScroll: true });
+  } catch {
+    input.focus();
+  }
 }
 
 function renderMatchingQuestion(q) {
@@ -571,6 +687,10 @@ function selectAnswer(choice, button) {
 function syncSubmitButton() {
   const q = state.session[state.index];
   if (state.answered) return;
+  if (q.mode === "fill" || q.mode === "definition") {
+    els.nextBtn.disabled = !state.typedAnswer.trim();
+    return;
+  }
   if (q.matching) {
     els.nextBtn.disabled = ![...els.answers.querySelectorAll("select")].every((item) => item.value);
     return;
@@ -586,6 +706,15 @@ function sameAnswers(selected, correct) {
   return picked.every((answer, index) => answer === expected[index]);
 }
 
+function normalizeTyped(value) {
+  return normalize(value).replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+function sameTypedAnswer(selected, correct) {
+  const typed = normalizeTyped(selected || "");
+  return correct.some((answer) => typed === normalizeTyped(answer));
+}
+
 function sameMatching(selected, matching) {
   if (!selected || selected.length !== matching.targets.length) return false;
   return selected.every((item) => normalize(item.answer) === normalize(matching.answers[item.target]));
@@ -597,10 +726,12 @@ function answerQuestion(selected, timedOut) {
   state.answered = true;
 
   const q = state.session[state.index];
-  const correct = q.matching ? sameMatching(selected, q.matching) : sameAnswers(selected, q.answers);
+  const correct = q.mode === "fill" || q.mode === "definition" ? sameTypedAnswer(selected, q.answers) : q.matching ? sameMatching(selected, q.matching) : sameAnswers(selected, q.answers);
   const buttons = [...els.answers.querySelectorAll(".answer-btn")];
 
-  if (q.matching) {
+  if (q.mode === "fill" || q.mode === "definition") {
+    markTypedQuestion(correct);
+  } else if (q.matching) {
     markMatchingQuestion(q, selected || []);
   } else {
     buttons.forEach((button) => {
@@ -649,6 +780,15 @@ function markMatchingQuestion(q, selected) {
   });
 }
 
+function markTypedQuestion(correct) {
+  const wrapper = els.answers.querySelector(".typed-answer");
+  const input = wrapper?.querySelector("input");
+  if (!wrapper || !input) return;
+  wrapper.classList.toggle("correct", correct);
+  wrapper.classList.toggle("wrong", !correct);
+  input.disabled = true;
+}
+
 function formatCorrectAnswer(q) {
   if (!q.matching) return q.answers.join(" | ");
   return q.matching.targets.map((target) => `${target} => ${q.matching.answers[target]}`).join(" | ");
@@ -658,7 +798,7 @@ function nextQuestion() {
   if (!state.session.length) return;
   if (!state.answered) {
     const q = state.session[state.index];
-    const selected = q.matching ? readMatchingSelection(els.answers.querySelector(".match-grid")) : [...state.selected];
+    const selected = q.mode === "fill" || q.mode === "definition" ? state.typedAnswer : q.matching ? readMatchingSelection(els.answers.querySelector(".match-grid")) : [...state.selected];
     answerQuestion(selected, false);
     return;
   }
@@ -705,9 +845,12 @@ document.querySelectorAll(".topic-chip").forEach((button) => {
     document.querySelectorAll(".topic-chip").forEach((chip) => chip.classList.remove("active"));
     button.classList.add("active");
     state.topic = button.dataset.topic;
+    updateBankSize();
   });
 });
 
+els.fillBlankMode.addEventListener("change", updateBankSize);
+els.definitionMode.addEventListener("change", updateBankSize);
 els.startBtn.addEventListener("click", () => startQuiz());
 els.soundToggle.addEventListener("click", () => {
   state.soundOn = !state.soundOn;
@@ -731,4 +874,4 @@ els.restartBtn.addEventListener("click", () => {
 els.retryMissedBtn.addEventListener("click", () => startQuiz(state.missed));
 
 state.allQuestions = window.QUESTION_BANK || parseQuestions(window.QUESTIONS_SOURCE || "");
-els.bankSize.textContent = state.allQuestions.length;
+updateBankSize();
