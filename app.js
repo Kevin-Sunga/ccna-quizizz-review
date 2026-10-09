@@ -484,6 +484,9 @@ function shortTypedAnswers(q) {
   const answer = q.answers[0]?.trim();
   if (!answer) return [];
 
+  const commandAnswers = commandTypedAnswers(answer);
+  if (commandAnswers.length) return commandAnswers;
+
   const explicit = keywordAnswers(answer);
   if (explicit.length) return explicit;
 
@@ -494,6 +497,13 @@ function shortTypedAnswers(q) {
     .trim();
   const words = cleaned.split(/\s+/).filter(Boolean);
   if (words.length <= 3 && cleaned.length <= 32 && !/[#()]|access-list/i.test(cleaned)) return [cleaned];
+  return [];
+}
+
+function commandTypedAnswers(answer) {
+  const command = answer.replace(/^[A-Za-z0-9_-]+[#>]\s*/, "").trim();
+  if (command !== answer && command.length <= 64) return [command, answer];
+  if (/^(show|clear|copy|reload|router|ip|access-list)\b/i.test(answer) && answer.length <= 64) return [answer];
   return [];
 }
 
@@ -523,10 +533,10 @@ function keywordAnswers(answer) {
     [/outside local/i, ["outside local"]],
     [/outside global/i, ["outside global"]],
     [/show ip nat translations/i, ["show ip nat translations"]],
-    [/PAT/i, ["PAT"]],
-    [/NAT/i, ["NAT"]],
-    [/OSPF/i, ["OSPF"]],
-    [/SPF/i, ["SPF"]],
+    [/^PAT$/i, ["PAT"]],
+    [/^NAT$/i, ["NAT"]],
+    [/^OSPF$/i, ["OSPF"]],
+    [/^SPF$/i, ["SPF"]],
     [/router ID/i, ["router ID"]],
     [/wildcard mask/i, ["wildcard mask"]],
     [/ACL/i, ["ACL"]],
