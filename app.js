@@ -153,6 +153,8 @@ const els = {
   questionCount: document.querySelector("#questionCount"),
   timerMode: document.querySelector("#timerMode"),
   topicSelect: document.querySelector("#topicSelect"),
+  topicSelectButton: document.querySelector("#topicSelectButton"),
+  topicSelectMenu: document.querySelector("#topicSelectMenu"),
   fillBlankMode: document.querySelector("#fillBlankMode"),
   definitionMode: document.querySelector("#definitionMode"),
   startBtn: document.querySelector("#startBtn"),
@@ -947,36 +949,67 @@ function finishQuiz() {
 }
 
 function selectedTopicValues() {
-  const values = [...els.topicSelect.selectedOptions].map((option) => option.value);
-  return values.length ? values : ["all"];
+  return [...els.topicSelectMenu.querySelectorAll("input:not([value='all']):checked")].map((input) => input.value);
 }
 
-function syncTopicSelection() {
-  const values = selectedTopicValues();
-  const allOption = [...els.topicSelect.options].find((option) => option.value === "all");
+function setAllTopics(checked) {
+  els.topicSelectMenu.querySelectorAll("input").forEach((input) => {
+    input.checked = checked;
+  });
+}
 
-  if (values.includes("all") && values.length > 1) {
-    if (allOption) allOption.selected = false;
-    state.topics = new Set(values.filter((value) => value !== "all"));
-    updateBankSize();
-    return;
+function updateTopicButton(values, allChecked) {
+  const label = els.topicSelectButton.querySelector("span");
+  if (allChecked) {
+    label.textContent = "All Modules";
+  } else if (values.length === 1) {
+    label.textContent = values[0];
+  } else {
+    label.textContent = `${values.length} selected`;
+  }
+}
+
+function syncTopicSelection(changedInput = null) {
+  const allInput = els.topicSelectMenu.querySelector("input[value='all']");
+  const topicInputs = [...els.topicSelectMenu.querySelectorAll("input:not([value='all'])")];
+
+  if (changedInput === allInput) {
+    setAllTopics(allInput.checked);
+  } else {
+    allInput.checked = topicInputs.every((input) => input.checked);
   }
 
-  if (values.includes("all") || values.length === 0) {
-    [...els.topicSelect.options].forEach((option) => {
-      option.selected = option.value === "all";
-    });
+  let values = selectedTopicValues();
+  if (!values.length) {
+    setAllTopics(true);
+    values = selectedTopicValues();
+  }
+
+  if (allInput.checked || values.length === topicInputs.length) {
     state.topics = new Set(["all"]);
-    updateBankSize();
-    return;
+    updateTopicButton(values, true);
+  } else {
+    state.topics = new Set(values);
+    updateTopicButton(values, false);
   }
 
-  if (allOption) allOption.selected = false;
-  state.topics = new Set(values);
   updateBankSize();
 }
 
-els.topicSelect.addEventListener("change", syncTopicSelection);
+els.topicSelectButton.addEventListener("click", () => {
+  const isOpen = els.topicSelect.classList.toggle("open");
+  els.topicSelectButton.setAttribute("aria-expanded", String(isOpen));
+});
+
+els.topicSelectMenu.querySelectorAll("input").forEach((input) => {
+  input.addEventListener("change", () => syncTopicSelection(input));
+});
+
+document.addEventListener("click", (event) => {
+  if (els.topicSelect.contains(event.target)) return;
+  els.topicSelect.classList.remove("open");
+  els.topicSelectButton.setAttribute("aria-expanded", "false");
+});
 
 els.fillBlankMode.addEventListener("change", updateBankSize);
 els.definitionMode.addEventListener("change", updateBankSize);

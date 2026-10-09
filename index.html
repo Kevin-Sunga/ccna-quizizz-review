@@ -46,20 +46,26 @@
               </label>
             </div>
 
-            <label class="topic-select-label">
-              Modules and topics
-              <select id="topicSelect" multiple size="9" aria-label="Modules and topics">
-                <option value="all" selected>All Modules</option>
-                <option value="Modules 1-2">Modules 1-2</option>
-                <option value="Modules 3-5">Modules 3-5</option>
-                <option value="Modules 6-8">Modules 6-8</option>
-                <option value="OSPF">OSPF</option>
-                <option value="Security">Security</option>
-                <option value="NAT">NAT</option>
-                <option value="WAN">WAN</option>
-                <option value="VPN">VPN</option>
-              </select>
-            </label>
+            <div class="topic-select-label">
+              <span>Modules and topics</span>
+              <div class="topic-select" id="topicSelect">
+                <button class="topic-select-button" id="topicSelectButton" type="button" aria-expanded="false">
+                  <span>All Modules</span>
+                  <b aria-hidden="true">v</b>
+                </button>
+                <div class="topic-select-menu" id="topicSelectMenu">
+                  <label><input type="checkbox" value="all" checked /> All Modules</label>
+                  <label><input type="checkbox" value="Modules 1-2" checked /> Modules 1-2</label>
+                  <label><input type="checkbox" value="Modules 3-5" checked /> Modules 3-5</label>
+                  <label><input type="checkbox" value="Modules 6-8" checked /> Modules 6-8</label>
+                  <label><input type="checkbox" value="OSPF" checked /> OSPF</label>
+                  <label><input type="checkbox" value="Security" checked /> Security</label>
+                  <label><input type="checkbox" value="NAT" checked /> NAT</label>
+                  <label><input type="checkbox" value="WAN" checked /> WAN</label>
+                  <label><input type="checkbox" value="VPN" checked /> VPN</label>
+                </div>
+              </div>
+            </div>
 
             <div class="mode-options" aria-label="Question type options">
               <label class="mode-toggle">
