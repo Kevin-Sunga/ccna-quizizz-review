@@ -646,7 +646,7 @@ function renderQuestion() {
     return;
   }
 
-  q.choices.forEach((choice, index) => {
+  shuffle(q.choices).forEach((choice, index) => {
     const button = document.createElement("button");
     button.className = "answer-btn";
     button.type = "button";
@@ -712,9 +712,11 @@ function renderTypedQuestion(q) {
 function renderMatchingQuestion(q) {
   const wrapper = document.createElement("div");
   wrapper.className = "match-grid";
+  const shuffledTargets = shuffle(q.matching.targets);
   const shuffledOptions = shuffle(q.matching.options);
+  q.currentTargetOrder = shuffledTargets;
 
-  q.matching.targets.forEach((target) => {
+  shuffledTargets.forEach((target) => {
     const row = document.createElement("label");
     row.className = "match-row";
     const text = document.createElement("span");
@@ -881,7 +883,8 @@ function markTypedQuestion(correct) {
 function formatCorrectAnswer(q) {
   if (q.mode === "fill" || q.mode === "definition") return q.typedAnswers?.join(" | ") || q.answers.join(" | ");
   if (!q.matching) return q.answers.join(" | ");
-  return q.matching.targets.map((target) => `${target} => ${q.matching.answers[target]}`).join(" | ");
+  const targets = q.currentTargetOrder || q.matching.targets;
+  return targets.map((target) => `${target} => ${q.matching.answers[target]}`).join(" | ");
 }
 
 function nextQuestion() {
