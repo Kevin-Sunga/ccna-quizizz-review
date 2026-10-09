@@ -440,19 +440,20 @@ function updateBankSize() {
 }
 
 function canMakeTypedQuestion(q) {
-  return q.gradable && !q.matching && q.answers.length === 1 && q.answers[0].length <= 90;
+  return q.gradable && !q.matching && q.answers.length === 1 && shortTypedAnswers(q).length > 0;
 }
 
 function canMakeDefinitionQuestion(q) {
   if (!canMakeTypedQuestion(q)) return false;
-  const answer = q.answers[0].trim();
+  const answer = shortTypedAnswers(q)[0];
   const wordCount = answer.split(/\s+/).length;
-  if (wordCount > 5 || answer.length > 48) return false;
+  if (wordCount > 3 || answer.length > 32) return false;
   if (/[#]|access-list|Router\(|\d+\.\d+\.\d+\.\d+|\/\d+/i.test(answer)) return false;
   return definitionClue(q).length >= 35;
 }
 
 function makeFillBlankQuestion(q) {
+  const typedAnswers = shortTypedAnswers(q);
   return {
     ...q,
     id: `${q.id || `${q.module}-${q.number}`}-fill`,
@@ -460,12 +461,13 @@ function makeFillBlankQuestion(q) {
     choices: [],
     matching: null,
     mode: "fill",
+    typedAnswers,
     sourceMode: "Fill in the blanks"
   };
 }
 
 function makeDefinitionQuestion(q) {
-  const answer = q.answers[0];
+  const answer = shortTypedAnswers(q)[0];
   return {
     ...q,
     id: `${q.id || `${q.module}-${q.number}`}-term`,
@@ -473,8 +475,74 @@ function makeDefinitionQuestion(q) {
     choices: [],
     matching: null,
     mode: "definition",
+    typedAnswers: shortTypedAnswers(q),
     sourceMode: "Definition of terms"
   };
+}
+
+function shortTypedAnswers(q) {
+  const answer = q.answers[0]?.trim();
+  if (!answer) return [];
+
+  const explicit = keywordAnswers(answer);
+  if (explicit.length) return explicit;
+
+  const cleaned = answer
+    .replace(/^it\s+(requires|allows|provides|uses|connects|creates)\s+/i, "")
+    .replace(/^(the|a|an)\s+/i, "")
+    .replace(/[.?!]+$/g, "")
+    .trim();
+  const words = cleaned.split(/\s+/).filter(Boolean);
+  if (words.length <= 3 && cleaned.length <= 32 && !/[#()]|access-list/i.test(cleaned)) return [cleaned];
+  return [];
+}
+
+function keywordAnswers(answer) {
+  const rules = [
+    [/VPN gateway/i, ["VPN gateway"]],
+    [/Diffie-Hellman|\bDH\b/i, ["Diffie-Hellman", "DH"]],
+    [/AES/i, ["AES"]],
+    [/SHA/i, ["SHA"]],
+    [/MD5/i, ["MD5"]],
+    [/HMAC/i, ["HMAC"]],
+    [/GRE over IPsec/i, ["GRE over IPsec"]],
+    [/clientless SSL/i, ["clientless SSL"]],
+    [/SSL VPN/i, ["SSL VPN"]],
+    [/IPsec virtual tunnel interface/i, ["IPsec VTI", "VTI"]],
+    [/dynamic multipoint VPN/i, ["DMVPN"]],
+    [/MPLS VPN/i, ["MPLS VPN"]],
+    [/remote access VPN/i, ["remote access VPN"]],
+    [/site-to-site VPN/i, ["site-to-site VPN"]],
+    [/Frame Relay/i, ["Frame Relay"]],
+    [/MetroE/i, ["MetroE"]],
+    [/leased line/i, ["leased line"]],
+    [/Ethernet WAN/i, ["Ethernet WAN"]],
+    [/port numbers/i, ["port numbers", "ports"]],
+    [/inside local/i, ["inside local"]],
+    [/inside global/i, ["inside global"]],
+    [/outside local/i, ["outside local"]],
+    [/outside global/i, ["outside global"]],
+    [/show ip nat translations/i, ["show ip nat translations"]],
+    [/PAT/i, ["PAT"]],
+    [/NAT/i, ["NAT"]],
+    [/OSPF/i, ["OSPF"]],
+    [/SPF/i, ["SPF"]],
+    [/router ID/i, ["router ID"]],
+    [/wildcard mask/i, ["wildcard mask"]],
+    [/ACL/i, ["ACL"]],
+    [/extended/i, ["extended"]],
+    [/standard ACL/i, ["standard ACL"]],
+    [/host/i, ["host"]],
+    [/any/i, ["any"]],
+    [/exploit/i, ["exploit"]],
+    [/social engineering/i, ["social engineering"]],
+    [/man-in-the-middle/i, ["man-in-the-middle"]],
+    [/integrity/i, ["integrity"]],
+    [/authentication/i, ["authentication"]],
+    [/confidentiality/i, ["confidentiality"]]
+  ];
+
+  return rules.find(([pattern]) => pattern.test(answer))?.[1] || [];
 }
 
 function definitionClue(q) {
@@ -726,7 +794,7 @@ function answerQuestion(selected, timedOut) {
   state.answered = true;
 
   const q = state.session[state.index];
-  const correct = q.mode === "fill" || q.mode === "definition" ? sameTypedAnswer(selected, q.answers) : q.matching ? sameMatching(selected, q.matching) : sameAnswers(selected, q.answers);
+  const correct = q.mode === "fill" || q.mode === "definition" ? sameTypedAnswer(selected, q.typedAnswers || q.answers) : q.matching ? sameMatching(selected, q.matching) : sameAnswers(selected, q.answers);
   const buttons = [...els.answers.querySelectorAll(".answer-btn")];
 
   if (q.mode === "fill" || q.mode === "definition") {
@@ -790,6 +858,7 @@ function markTypedQuestion(correct) {
 }
 
 function formatCorrectAnswer(q) {
+  if (q.mode === "fill" || q.mode === "definition") return q.typedAnswers?.join(" | ") || q.answers.join(" | ");
   if (!q.matching) return q.answers.join(" | ");
   return q.matching.targets.map((target) => `${target} => ${q.matching.answers[target]}`).join(" | ");
 }
