@@ -106,19 +106,21 @@ function stripTags(value) {
 }
 
 function parseHtmlQuestions(html, moduleName) {
-  const start = html.search(/<p><strong>\s*1\./i);
+  const start = html.search(/<p><(?:strong|b)>\s*1\./i);
   const end = html.search(/<h[1-6][^>]*>About The Author/i);
   const body = html.slice(start, end > start ? end : undefined);
-  const blocks = body.split(/(?=<p><strong>\s*\d+\.)/i).filter((block) => /^\s*<p><strong>\s*\d+\./i.test(block));
+  const blocks = body.split(/(?=<p><(?:strong|b)>\s*\d+\.)/i).filter((block) => /^\s*<p><(?:strong|b)>\s*\d+\./i.test(block));
 
   return blocks.map((block) => {
-    const questionMatch = block.match(/<p><strong>\s*(\d+)\.\s*([\s\S]*?)<\/strong><\/p>/i);
+    const questionMatch = block.match(/<p><(?:strong|b)>\s*(\d+)\.\s*([\s\S]*?)<\/(?:strong|b)>[\s\S]*?<\/p>/i);
     if (!questionMatch) return null;
     const number = Number(questionMatch[1]);
     const question = stripTags(`${number}. ${questionMatch[2]}`);
-    const listMatch = block.match(/<ul>([\s\S]*?)<\/ul>/i);
+    const listMatch = block.match(/<ul[^>]*>([\s\S]*?)<\/ul>/i);
+    const tableMatch = block.match(/<table[^>]*>([\s\S]*?)<\/table>/i);
     const choices = [];
     const answers = [];
+    let matching = null;
 
     if (listMatch) {
       for (const li of listMatch[1].matchAll(/<li([^>]*)>([\s\S]*?)<\/li>/gi)) {
@@ -126,6 +128,24 @@ function parseHtmlQuestions(html, moduleName) {
         if (!choice) continue;
         choices.push(choice);
         if (/correct_answer/.test(li[1])) answers.push(choice);
+      }
+    }
+
+    if (!choices.length && tableMatch) {
+      const pairs = [];
+      for (const row of tableMatch[1].matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi)) {
+        const cells = [...row[1].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/gi)].map((cell) => stripTags(cell[1]));
+        if (cells.length >= 2 && cells[0] && cells[1]) pairs.push([cells[0], cells[1]]);
+      }
+
+      if (pairs.length) {
+        const targets = pairs.map(([target]) => target);
+        const options = [...new Set(pairs.map(([, answer]) => answer))];
+        matching = {
+          targets,
+          options,
+          answers: Object.fromEntries(pairs)
+        };
       }
     }
 
@@ -140,9 +160,9 @@ function parseHtmlQuestions(html, moduleName) {
       question,
       choices,
       answers,
-      matching: null,
+      matching,
       explanation,
-      gradable: choices.length > 0 && answers.length > 0,
+      gradable: Boolean(matching) || (choices.length > 0 && answers.length > 0),
       raw: `${question}\n\n${choices.join("\n")}\n${explanation}`.trim()
     };
   }).filter(Boolean);

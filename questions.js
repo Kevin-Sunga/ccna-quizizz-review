@@ -89,7 +89,7 @@ window.QUESTION_BANK = [
     "module": "Modules 1-2",
     "number": 5,
     "topic": "OSPF",
-    "question": "5. What is used to facilitate hierarchical routing in OSPF?",
+    "question": "5.",
     "choices": [
       "the use of multiple areas",
       "frequent SPF calculations",
@@ -102,7 +102,7 @@ window.QUESTION_BANK = [
     "matching": null,
     "explanation": "Explanation: Topic 1.1.4\n\nOSPF supports the concept of areas to prevent larger routing tables, excessive SPF calculations, and large LSDBs. Only routers within an area share link-state information. This allows OSPF to scale in a hierarchical fashion with all areas that connect to a backbone area.",
     "gradable": true,
-    "raw": "5. What is used to facilitate hierarchical routing in OSPF?\n\nthe use of multiple areas\nfrequent SPF calculations\nautosummarization\nthe election of designated routers\nExplanation: Topic 1.1.4\n\nOSPF supports the concept of areas to prevent larger routing tables, excessive SPF calculations, and large LSDBs. Only routers within an area share link-state information. This allows OSPF to scale in a hierarchical fashion with all areas that connect to a backbone area."
+    "raw": "5.\n\nthe use of multiple areas\nfrequent SPF calculations\nautosummarization\nthe election of designated routers\nExplanation: Topic 1.1.4\n\nOSPF supports the concept of areas to prevent larger routing tables, excessive SPF calculations, and large LSDBs. Only routers within an area share link-state information. This allows OSPF to scale in a hierarchical fashion with all areas that connect to a backbone area."
   },
   {
     "id": "Modules 1-2-6",
@@ -734,7 +734,7 @@ window.QUESTION_BANK = [
     "module": "Modules 1-2",
     "number": 37,
     "topic": "OSPF",
-    "question": "37. Open the PT Activity. Perform the tasks in the activity instructions and then answer the question.\n\nWhich task has to be performed on Router 1 for it to establish an OSPF adjacency with Router 2?",
+    "question": "37. Open the PT Activity. Perform the tasks in the activity instructions and then answer the question.",
     "choices": [
       "Issue the clear ip ospf process command.",
       "Change the subnet mask of interface FastEthernet 0/0 to 255.255.255.0.",
@@ -747,7 +747,7 @@ window.QUESTION_BANK = [
     "matching": null,
     "explanation": "Explanation: Topic 2.6.1\n\nEach interface on the link connecting the OSPF routers must be in the same subnet for an adjacency to be established. The IP address subnet mask on FastEthernet interface 0/0 must be changed to 255.255.255.0. The FastEthernet interface 0/0 is not passive. The 10.0.1.0/24 network is only connected to Router2 so should not be advertised by Router1. The clear ip ospf process command will start the OPSF process on Router1 but will not cause an adjacency to be established if the subnet mask mismatch on the connecting interfaces still exists.",
     "gradable": true,
-    "raw": "37. Open the PT Activity. Perform the tasks in the activity instructions and then answer the question.\n\nWhich task has to be performed on Router 1 for it to establish an OSPF adjacency with Router 2?\n\nIssue the clear ip ospf process command.\nChange the subnet mask of interface FastEthernet 0/0 to 255.255.255.0.\nRemove the passive interface command from interface FastEthernet 0/0.\nAdd the network 10.0.1.0 0.0.0.255 area 0 command to the OSPF process.\nExplanation: Topic 2.6.1\n\nEach interface on the link connecting the OSPF routers must be in the same subnet for an adjacency to be established. The IP address subnet mask on FastEthernet interface 0/0 must be changed to 255.255.255.0. The FastEthernet interface 0/0 is not passive. The 10.0.1.0/24 network is only connected to Router2 so should not be advertised by Router1. The clear ip ospf process command will start the OPSF process on Router1 but will not cause an adjacency to be established if the subnet mask mismatch on the connecting interfaces still exists."
+    "raw": "37. Open the PT Activity. Perform the tasks in the activity instructions and then answer the question.\n\nIssue the clear ip ospf process command.\nChange the subnet mask of interface FastEthernet 0/0 to 255.255.255.0.\nRemove the passive interface command from interface FastEthernet 0/0.\nAdd the network 10.0.1.0 0.0.0.255 area 0 command to the OSPF process.\nExplanation: Topic 2.6.1\n\nEach interface on the link connecting the OSPF routers must be in the same subnet for an adjacency to be established. The IP address subnet mask on FastEthernet interface 0/0 must be changed to 255.255.255.0. The FastEthernet interface 0/0 is not passive. The 10.0.1.0/24 network is only connected to Router2 so should not be advertised by Router1. The clear ip ospf process command will start the OPSF process on Router1 but will not cause an adjacency to be established if the subnet mask mismatch on the connecting interfaces still exists."
   },
   {
     "id": "Modules 1-2-38",
@@ -757,9 +757,28 @@ window.QUESTION_BANK = [
     "question": "38. Match the description to the term. (Not all options are used.)",
     "choices": [],
     "answers": [],
-    "matching": null,
+    "matching": {
+      "targets": [
+        "This is the algorithm used by OSPF.",
+        "This is where the details of the neighboring routers can be found.",
+        "All the routers are in the backbone area.",
+        "This is where you can find the topology table."
+      ],
+      "options": [
+        "Shortest Path First",
+        "Adjacency database",
+        "Single-area OSPF",
+        "Link-state database"
+      ],
+      "answers": {
+        "This is the algorithm used by OSPF.": "Shortest Path First",
+        "This is where the details of the neighboring routers can be found.": "Adjacency database",
+        "All the routers are in the backbone area.": "Single-area OSPF",
+        "This is where you can find the topology table.": "Link-state database"
+      }
+    },
     "explanation": "Explanation: Topic 1.1.2\n\nDUAL is the algorithm used by EIGRP. In multiarea OSPF, OSPF is implemented using multiple areas, and all of them must be connected to the backbone area.",
-    "gradable": false,
+    "gradable": true,
     "raw": "38. Match the description to the term. (Not all options are used.)\n\n\nExplanation: Topic 1.1.2\n\nDUAL is the algorithm used by EIGRP. In multiarea OSPF, OSPF is implemented using multiple areas, and all of them must be connected to the backbone area."
   },
   {
@@ -781,6 +800,47 @@ window.QUESTION_BANK = [
     "explanation": "Explanation: Topic 1.1.5\n\nWith multiarea OSPF, only routers within an area share the same link-state database. Changes to the network topology in one area do not impact other areas, which reduces the number of SPF algorithm calculations and the of link-state databases.",
     "gradable": true,
     "raw": "39. What is a benefit of multiarea OSPF routing?\n\nTopology changes in one area do not cause SPF recalculations in other areas.\nRouters in all areas share the same link-state database and have a complete picture of the entire network.\nA backbone area is not required.\nAutomatic route summarization occurs by default between areas.\nExplanation: Topic 1.1.5\n\nWith multiarea OSPF, only routers within an area share the same link-state database. Changes to the network topology in one area do not impact other areas, which reduces the number of SPF algorithm calculations and the of link-state databases."
+  },
+  {
+    "id": "Modules 1-2-40",
+    "module": "Modules 1-2",
+    "number": 40,
+    "topic": "OSPF",
+    "question": "40. Match the OSPF state with the order in which it occurs. (Not all options are used.)",
+    "choices": [],
+    "answers": [],
+    "matching": {
+      "targets": [
+        "second state",
+        "seventh state",
+        "fifth state",
+        "first state",
+        "fourth state",
+        "third state",
+        "sixth state"
+      ],
+      "options": [
+        "Init state",
+        "Full state",
+        "Exchange state",
+        "Down state",
+        "Exstart state",
+        "Two-way state",
+        "Loading state"
+      ],
+      "answers": {
+        "second state": "Init state",
+        "seventh state": "Full state",
+        "fifth state": "Exchange state",
+        "first state": "Down state",
+        "fourth state": "Exstart state",
+        "third state": "Two-way state",
+        "sixth state": "Loading state"
+      }
+    },
+    "explanation": "",
+    "gradable": true,
+    "raw": "40. Match the OSPF state with the order in which it occurs. (Not all options are used.)"
   },
   {
     "id": "Modules 1-2-41",
@@ -914,9 +974,28 @@ window.QUESTION_BANK = [
     "question": "47. Match each OSPF packet type to how it is used by a router. (Not all options are used.)",
     "choices": [],
     "answers": [],
-    "matching": null,
+    "matching": {
+      "targets": [
+        "link-state request packet",
+        "hello packet",
+        "database description packet",
+        "link-state update packet"
+      ],
+      "options": [
+        "query another router for additional information",
+        "establish and maintain adjacencies",
+        "compare local topology to that sent by another router",
+        "advertise new information"
+      ],
+      "answers": {
+        "link-state request packet": "query another router for additional information",
+        "hello packet": "establish and maintain adjacencies",
+        "database description packet": "compare local topology to that sent by another router",
+        "link-state update packet": "advertise new information"
+      }
+    },
     "explanation": "Explanation: Topic 1.2.2",
-    "gradable": false,
+    "gradable": true,
     "raw": "47. Match each OSPF packet type to how it is used by a router. (Not all options are used.)\n\n\nExplanation: Topic 1.2.2"
   },
   {
@@ -955,9 +1034,69 @@ window.QUESTION_BANK = [
       "0.0.3.255"
     ],
     "matching": null,
-    "explanation": "Explanation: Topic 2.2.2\n\n50. An administrator is configuring single-area OSPF on a router. One of the networks that must be advertised is 128.107.0.0 255.255.252.0. What wildcard mask would the administrator use in the OSPF network statement?\n\n0.0.3.255\n0.0.0.7\n0.0.0.3\n0.0.63.255\n\nExplanation: Topic 2.2.2\n\n51. Which step in the link-state routing process is described by a router flooding link-state and cost information about each directly connected link?\n\nbuilding the topology table\nselecting the router ID\nexchanging link-state advertisements\ninjecting the default route\n\nExplanation: Topic 1.1.3\n\nAccording to the link-state routing process, once neighbor adjacencies are established, routers begin exchanging link-state advertisements (LSAs). During this step, each router floods information regarding the state and cost of its directly connected links to its neighbors. These neighbors then immediately forward the information to their own neighbors until all routers in the OSPF area possess identical link-state information.\n52. Which step in the link-state routing process is described by a router sending Hello packets out all of the OSPF-enabled interfaces?\n\nelecting the designated router\nestablishing neighbor adjacencies\ninjecting the default route\nexchanging link-state advertisements\n\nExplanation: Topic 1.1.3",
+    "explanation": "Explanation: Topic 2.2.2",
     "gradable": true,
-    "raw": "49. An administrator is configuring single-area OSPF on a router. One of the networks that must be advertised is 198.19.0.0 255.255.252.0. What wildcard mask would the administrator use in the OSPF network statement?\n\n0.0.63.255\n0.0.3.255\n0.0.31.255\n0.0.0.255\nExplanation: Topic 2.2.2\n\n50. An administrator is configuring single-area OSPF on a router. One of the networks that must be advertised is 128.107.0.0 255.255.252.0. What wildcard mask would the administrator use in the OSPF network statement?\n\n0.0.3.255\n0.0.0.7\n0.0.0.3\n0.0.63.255\n\nExplanation: Topic 2.2.2\n\n51. Which step in the link-state routing process is described by a router flooding link-state and cost information about each directly connected link?\n\nbuilding the topology table\nselecting the router ID\nexchanging link-state advertisements\ninjecting the default route\n\nExplanation: Topic 1.1.3\n\nAccording to the link-state routing process, once neighbor adjacencies are established, routers begin exchanging link-state advertisements (LSAs). During this step, each router floods information regarding the state and cost of its directly connected links to its neighbors. These neighbors then immediately forward the information to their own neighbors until all routers in the OSPF area possess identical link-state information.\n52. Which step in the link-state routing process is described by a router sending Hello packets out all of the OSPF-enabled interfaces?\n\nelecting the designated router\nestablishing neighbor adjacencies\ninjecting the default route\nexchanging link-state advertisements\n\nExplanation: Topic 1.1.3"
+    "raw": "49. An administrator is configuring single-area OSPF on a router. One of the networks that must be advertised is 198.19.0.0 255.255.252.0. What wildcard mask would the administrator use in the OSPF network statement?\n\n0.0.63.255\n0.0.3.255\n0.0.31.255\n0.0.0.255\nExplanation: Topic 2.2.2"
+  },
+  {
+    "id": "Modules 1-2-50",
+    "module": "Modules 1-2",
+    "number": 50,
+    "topic": "OSPF",
+    "question": "50. An administrator is configuring single-area OSPF on a router. One of the networks that must be advertised is 128.107.0.0 255.255.252.0. What wildcard mask would the administrator use in the OSPF network statement?",
+    "choices": [
+      "0.0.3.255",
+      "0.0.0.7",
+      "0.0.0.3",
+      "0.0.63.255"
+    ],
+    "answers": [
+      "0.0.3.255"
+    ],
+    "matching": null,
+    "explanation": "Explanation: Topic 2.2.2",
+    "gradable": true,
+    "raw": "50. An administrator is configuring single-area OSPF on a router. One of the networks that must be advertised is 128.107.0.0 255.255.252.0. What wildcard mask would the administrator use in the OSPF network statement?\n\n0.0.3.255\n0.0.0.7\n0.0.0.3\n0.0.63.255\nExplanation: Topic 2.2.2"
+  },
+  {
+    "id": "Modules 1-2-51",
+    "module": "Modules 1-2",
+    "number": 51,
+    "topic": "OSPF",
+    "question": "51. Which step in the link-state routing process is described by a router flooding link-state and cost information about each directly connected link?",
+    "choices": [
+      "building the topology table",
+      "selecting the router ID",
+      "exchanging link-state advertisements",
+      "injecting the default route"
+    ],
+    "answers": [
+      "exchanging link-state advertisements"
+    ],
+    "matching": null,
+    "explanation": "Explanation: Topic 1.1.3\n\nAccording to the link-state routing process, once neighbor adjacencies are established, routers begin exchanging link-state advertisements (LSAs). During this step, each router floods information regarding the state and cost of its directly connected links to its neighbors. These neighbors then immediately forward the information to their own neighbors until all routers in the OSPF area possess identical link-state information.",
+    "gradable": true,
+    "raw": "51. Which step in the link-state routing process is described by a router flooding link-state and cost information about each directly connected link?\n\nbuilding the topology table\nselecting the router ID\nexchanging link-state advertisements\ninjecting the default route\nExplanation: Topic 1.1.3\n\nAccording to the link-state routing process, once neighbor adjacencies are established, routers begin exchanging link-state advertisements (LSAs). During this step, each router floods information regarding the state and cost of its directly connected links to its neighbors. These neighbors then immediately forward the information to their own neighbors until all routers in the OSPF area possess identical link-state information."
+  },
+  {
+    "id": "Modules 1-2-52",
+    "module": "Modules 1-2",
+    "number": 52,
+    "topic": "OSPF",
+    "question": "52. Which step in the link-state routing process is described by a router sending Hello packets out all of the OSPF-enabled interfaces?",
+    "choices": [
+      "electing the designated router",
+      "establishing neighbor adjacencies",
+      "injecting the default route",
+      "exchanging link-state advertisements"
+    ],
+    "answers": [
+      "establishing neighbor adjacencies"
+    ],
+    "matching": null,
+    "explanation": "Explanation: Topic 1.1.3",
+    "gradable": true,
+    "raw": "52. Which step in the link-state routing process is described by a router sending Hello packets out all of the OSPF-enabled interfaces?\n\nelecting the designated router\nestablishing neighbor adjacencies\ninjecting the default route\nexchanging link-state advertisements\nExplanation: Topic 1.1.3"
   },
   {
     "id": "Modules 1-2-53",
@@ -975,9 +1114,47 @@ window.QUESTION_BANK = [
       "0.0.0.255"
     ],
     "matching": null,
-    "explanation": "Explanation: Topic 2.2.2\n\n54. Which step in the link-state routing process is described by a router inserting best paths into the routing table?\n\ndeclaring a neighbor to be inaccessible\nexecuting the SPF algorithm\nload balancing equal-cost paths\nchoosing the best route\n\nExplanation: Topic 1.1.3\nThis is the final step in the generic link-state routing process. After the SPF algorithm creates the SPF tree, the router identifies the shortest paths to each destination and offers them to the IP routing table. These best paths are then inserted into the routing table unless a route to the same network with a lower administrative distance exists.\n\n55. What type of address is 64.101.198.197?\n\npublic\nprivate\n\nExplanation: Topic 2.5.1",
+    "explanation": "Explanation: Topic 2.2.2",
     "gradable": true,
-    "raw": "53. An administrator is configuring single-area OSPF on a router. One of the networks that must be advertised is 64.100.0.0 255.255.255.0. What wildcard mask would the administrator use in the OSPF network statement?\n\n0.0.0.31\n0.0.0.255\n0.0.0.63\n0.0.0.127\nExplanation: Topic 2.2.2\n\n54. Which step in the link-state routing process is described by a router inserting best paths into the routing table?\n\ndeclaring a neighbor to be inaccessible\nexecuting the SPF algorithm\nload balancing equal-cost paths\nchoosing the best route\n\nExplanation: Topic 1.1.3\nThis is the final step in the generic link-state routing process. After the SPF algorithm creates the SPF tree, the router identifies the shortest paths to each destination and offers them to the IP routing table. These best paths are then inserted into the routing table unless a route to the same network with a lower administrative distance exists.\n\n55. What type of address is 64.101.198.197?\n\npublic\nprivate\n\nExplanation: Topic 2.5.1"
+    "raw": "53. An administrator is configuring single-area OSPF on a router. One of the networks that must be advertised is 64.100.0.0 255.255.255.0. What wildcard mask would the administrator use in the OSPF network statement?\n\n0.0.0.31\n0.0.0.255\n0.0.0.63\n0.0.0.127\nExplanation: Topic 2.2.2"
+  },
+  {
+    "id": "Modules 1-2-54",
+    "module": "Modules 1-2",
+    "number": 54,
+    "topic": "OSPF",
+    "question": "54. Which step in the link-state routing process is described by a router inserting best paths into the routing table?",
+    "choices": [
+      "declaring a neighbor to be inaccessible",
+      "executing the SPF algorithm",
+      "load balancing equal-cost paths",
+      "choosing the best route"
+    ],
+    "answers": [
+      "choosing the best route"
+    ],
+    "matching": null,
+    "explanation": "Explanation: Topic 1.1.3\nThis is the final step in the generic link-state routing process. After the SPF algorithm creates the SPF tree, the router identifies the shortest paths to each destination and offers them to the IP routing table. These best paths are then inserted into the routing table unless a route to the same network with a lower administrative distance exists.",
+    "gradable": true,
+    "raw": "54. Which step in the link-state routing process is described by a router inserting best paths into the routing table?\n\ndeclaring a neighbor to be inaccessible\nexecuting the SPF algorithm\nload balancing equal-cost paths\nchoosing the best route\nExplanation: Topic 1.1.3\nThis is the final step in the generic link-state routing process. After the SPF algorithm creates the SPF tree, the router identifies the shortest paths to each destination and offers them to the IP routing table. These best paths are then inserted into the routing table unless a route to the same network with a lower administrative distance exists."
+  },
+  {
+    "id": "Modules 1-2-55",
+    "module": "Modules 1-2",
+    "number": 55,
+    "topic": "OSPF",
+    "question": "55. What type of address is 64.101.198.197?",
+    "choices": [
+      "public",
+      "private"
+    ],
+    "answers": [
+      "public"
+    ],
+    "matching": null,
+    "explanation": "Explanation: Topic 2.5.1",
+    "gradable": true,
+    "raw": "55. What type of address is 64.101.198.197?\n\npublic\nprivate\nExplanation: Topic 2.5.1"
   },
   {
     "id": "Modules 1-2-56",
@@ -995,9 +1172,29 @@ window.QUESTION_BANK = [
       "router(config-router)# network 172.16.1.0 0.0.0.255 area 0"
     ],
     "matching": null,
-    "explanation": "Explanation: Topic 2.2.4\n\nTo advertise only the 172.16.1.0/24 network the wildcard mask used in the network command must match the first 24-bits exactly. To match bits exactly, a wildcard mask uses a binary zero. This means that the first 24-bits of the wildcard mask must be zero. The low order 8-bits can all be set to 1.\n57. Which step in the link-state routing process is described by a router building a link-state database based on received LSAs?\n\nselecting the router ID\ndeclaring a neighbor to be inaccessible\nexecuting the SPF algorithm\nbuilding the topology table\n\nExplanation: Topic 1.1.3\nIn the generic link-state routing process, the third step is to build the Link-State Database (LSDB). After Link-State Advertisements (LSAs) are received from adjacent neighbors, OSPF-enabled routers use that information to build the topology table (LSDB), which contains information about all other routers in the network area and represents the overall network topology. Once this database is synchronized, the router can then execute the SPF algorithm to find the best paths.\n\n\t\tPost navigation\n\t\t← Previous Article CCNA 3 v7 Exam Answers - Enterprise Networking, Security, and Automation v7.0 (ENSA)Next Article → CCNA 3 v7 Modules 3 - 5: Network Security Exam Answers",
+    "explanation": "Explanation: Topic 2.2.4\n\nTo advertise only the 172.16.1.0/24 network the wildcard mask used in the network command must match the first 24-bits exactly. To match bits exactly, a wildcard mask uses a binary zero. This means that the first 24-bits of the wildcard mask must be zero. The low order 8-bits can all be set to 1.",
     "gradable": true,
-    "raw": "56. An OSPF router has three directly connected networks; 172.16.0.0/24, 172.16.1.0/24, and 172.16.2.0/24. Which OSPF network command would advertise only the 172.16.1.0 network to neighbors?\n\nrouter(config-router)# network 172.16.1.0 0.0.255.255 area 0\nrouter(config-router)# network 172.16.0.0 0.0.15.255 area 0\nrouter(config-router)# network 172.16.1.0 0.0.0.255 area 0\nrouter(config-router)# network 172.16.1.0 0.0.0.0 area 0\nExplanation: Topic 2.2.4\n\nTo advertise only the 172.16.1.0/24 network the wildcard mask used in the network command must match the first 24-bits exactly. To match bits exactly, a wildcard mask uses a binary zero. This means that the first 24-bits of the wildcard mask must be zero. The low order 8-bits can all be set to 1.\n57. Which step in the link-state routing process is described by a router building a link-state database based on received LSAs?\n\nselecting the router ID\ndeclaring a neighbor to be inaccessible\nexecuting the SPF algorithm\nbuilding the topology table\n\nExplanation: Topic 1.1.3\nIn the generic link-state routing process, the third step is to build the Link-State Database (LSDB). After Link-State Advertisements (LSAs) are received from adjacent neighbors, OSPF-enabled routers use that information to build the topology table (LSDB), which contains information about all other routers in the network area and represents the overall network topology. Once this database is synchronized, the router can then execute the SPF algorithm to find the best paths.\n\n\t\tPost navigation\n\t\t← Previous Article CCNA 3 v7 Exam Answers - Enterprise Networking, Security, and Automation v7.0 (ENSA)Next Article → CCNA 3 v7 Modules 3 - 5: Network Security Exam Answers"
+    "raw": "56. An OSPF router has three directly connected networks; 172.16.0.0/24, 172.16.1.0/24, and 172.16.2.0/24. Which OSPF network command would advertise only the 172.16.1.0 network to neighbors?\n\nrouter(config-router)# network 172.16.1.0 0.0.255.255 area 0\nrouter(config-router)# network 172.16.0.0 0.0.15.255 area 0\nrouter(config-router)# network 172.16.1.0 0.0.0.255 area 0\nrouter(config-router)# network 172.16.1.0 0.0.0.0 area 0\nExplanation: Topic 2.2.4\n\nTo advertise only the 172.16.1.0/24 network the wildcard mask used in the network command must match the first 24-bits exactly. To match bits exactly, a wildcard mask uses a binary zero. This means that the first 24-bits of the wildcard mask must be zero. The low order 8-bits can all be set to 1."
+  },
+  {
+    "id": "Modules 1-2-57",
+    "module": "Modules 1-2",
+    "number": 57,
+    "topic": "OSPF",
+    "question": "57. Which step in the link-state routing process is described by a router building a link-state database based on received LSAs?",
+    "choices": [
+      "selecting the router ID",
+      "declaring a neighbor to be inaccessible",
+      "executing the SPF algorithm",
+      "building the topology table"
+    ],
+    "answers": [
+      "building the topology table"
+    ],
+    "matching": null,
+    "explanation": "Explanation: Topic 1.1.3\nIn the generic link-state routing process, the third step is to build the Link-State Database (LSDB). After Link-State Advertisements (LSAs) are received from adjacent neighbors, OSPF-enabled routers use that information to build the topology table (LSDB), which contains information about all other routers in the network area and represents the overall network topology. Once this database is synchronized, the router can then execute the SPF algorithm to find the best paths.\n\n\t\tPost navigation\n\t\t← Previous Article CCNA 3 v7 Exam Answers - Enterprise Networking, Security, and Automation v7.0 (ENSA)Next Article → CCNA 3 v7 Modules 3 - 5: Network Security Exam Answers",
+    "gradable": true,
+    "raw": "57. Which step in the link-state routing process is described by a router building a link-state database based on received LSAs?\n\nselecting the router ID\ndeclaring a neighbor to be inaccessible\nexecuting the SPF algorithm\nbuilding the topology table\nExplanation: Topic 1.1.3\nIn the generic link-state routing process, the third step is to build the Link-State Database (LSDB). After Link-State Advertisements (LSAs) are received from adjacent neighbors, OSPF-enabled routers use that information to build the topology table (LSDB), which contains information about all other routers in the network area and represents the overall network topology. Once this database is synchronized, the router can then execute the SPF algorithm to find the best paths.\n\n\t\tPost navigation\n\t\t← Previous Article CCNA 3 v7 Exam Answers - Enterprise Networking, Security, and Automation v7.0 (ENSA)Next Article → CCNA 3 v7 Modules 3 - 5: Network Security Exam Answers"
   },
   {
     "id": "Modules 3-5-1",
@@ -1207,12 +1404,21 @@ window.QUESTION_BANK = [
     "number": 11,
     "topic": "Security",
     "question": "11. Refer to the exhibit. Which two ACLs would permit only the two LAN networks attached to R1 to access the network that connects to R2 G0/1 interface? (Choose two.)",
-    "choices": [],
-    "answers": [],
+    "choices": [
+      "access-list 1 permit 192.168.10.0 0.0.0.127",
+      "access-list 2 permit host 192.168.10.9\n\naccess-list 2 permit host 192.168.10.69",
+      "access-list 5 permit 192.168.10.0 0.0.0.63\n\naccess-list 5 permit 192.168.10.64 0.0.0.63",
+      "access-list 3 permit 192.168.10.128 0.0.0.63",
+      "access-list 4 permit 192.168.10.0 0.0.0.255"
+    ],
+    "answers": [
+      "access-list 1 permit 192.168.10.0 0.0.0.127",
+      "access-list 5 permit 192.168.10.0 0.0.0.63\n\naccess-list 5 permit 192.168.10.64 0.0.0.63"
+    ],
     "matching": null,
     "explanation": "Explanation: Topic 4.2.2\n\nThe permit 192.168.10.0 0.0.0.127 command ignores bit positions 1 through 7, which means that addresses 192.168.10.0 through 192.168.10.127 are allowed through. The two ACEs of permit 192.168.10.0 0.0.0.63 and permit 192.168.10.64 0.0.0.63 allow the same address range through the router.",
-    "gradable": false,
-    "raw": "11. Refer to the exhibit. Which two ACLs would permit only the two LAN networks attached to R1 to access the network that connects to R2 G0/1 interface? (Choose two.)\n\n\nExplanation: Topic 4.2.2\n\nThe permit 192.168.10.0 0.0.0.127 command ignores bit positions 1 through 7, which means that addresses 192.168.10.0 through 192.168.10.127 are allowed through. The two ACEs of permit 192.168.10.0 0.0.0.63 and permit 192.168.10.64 0.0.0.63 allow the same address range through the router."
+    "gradable": true,
+    "raw": "11. Refer to the exhibit. Which two ACLs would permit only the two LAN networks attached to R1 to access the network that connects to R2 G0/1 interface? (Choose two.)\n\naccess-list 1 permit 192.168.10.0 0.0.0.127\naccess-list 2 permit host 192.168.10.9\n\naccess-list 2 permit host 192.168.10.69\naccess-list 5 permit 192.168.10.0 0.0.0.63\n\naccess-list 5 permit 192.168.10.64 0.0.0.63\naccess-list 3 permit 192.168.10.128 0.0.0.63\naccess-list 4 permit 192.168.10.0 0.0.0.255\nExplanation: Topic 4.2.2\n\nThe permit 192.168.10.0 0.0.0.127 command ignores bit positions 1 through 7, which means that addresses 192.168.10.0 through 192.168.10.127 are allowed through. The two ACEs of permit 192.168.10.0 0.0.0.63 and permit 192.168.10.64 0.0.0.63 allow the same address range through the router."
   },
   {
     "id": "Modules 3-5-12",
@@ -1682,18 +1888,18 @@ window.QUESTION_BANK = [
     "topic": "Security",
     "question": "34. Which set of access control entries would allow all users on the 192.168.10.0/24 network to access a web server that is located at 172.17.80.1, but would not allow them to use Telnet?",
     "choices": [
-      "identification number in the range 100-199 or 2000-2699",
-      "permit or deny parameter",
-      "protocol",
-      "source address and wildcard",
-      "destination address and wildcard",
-      "port number or name"
+      "access-list 103 deny tcp host 192.168.10.0 any eq 23\n\naccess-list 103 permit tcp host 192.168.10.1 eq 80",
+      "access-list 103 permit tcp 192.168.10.0 0.0.0.255 any eq 80\n\naccess-list 103 deny tcp 192.168.10.0 0.0.0.255 any eq 23",
+      "access-list 103 permit 192.168.10.0 0.0.0.255 host 172.17.80.1\n\naccess-list 103 deny tcp 192.168.10.0 0.0.0.255 any eq telnet",
+      "access-list 103 permit tcp 192.168.10.0 0.0.0.255 host 172.17.80.1 eq 80\n\naccess-list 103 deny tcp 192.168.10.0 0.0.0.255 any eq 23"
     ],
-    "answers": [],
+    "answers": [
+      "access-list 103 permit tcp 192.168.10.0 0.0.0.255 host 172.17.80.1 eq 80\n\naccess-list 103 deny tcp 192.168.10.0 0.0.0.255 any eq 23"
+    ],
     "matching": null,
     "explanation": "Explanation: Topic 5.4.2\n\nFor an extended ACL to meet these requirements the following need to be included in the access control entries:\n\nidentification number in the range 100-199 or 2000-2699\npermit or deny parameter\nprotocol\nsource address and wildcard\ndestination address and wildcard\nport number or name",
-    "gradable": false,
-    "raw": "34. Which set of access control entries would allow all users on the 192.168.10.0/24 network to access a web server that is located at 172.17.80.1, but would not allow them to use Telnet?\n\nidentification number in the range 100-199 or 2000-2699\npermit or deny parameter\nprotocol\nsource address and wildcard\ndestination address and wildcard\nport number or name\nExplanation: Topic 5.4.2\n\nFor an extended ACL to meet these requirements the following need to be included in the access control entries:\n\nidentification number in the range 100-199 or 2000-2699\npermit or deny parameter\nprotocol\nsource address and wildcard\ndestination address and wildcard\nport number or name"
+    "gradable": true,
+    "raw": "34. Which set of access control entries would allow all users on the 192.168.10.0/24 network to access a web server that is located at 172.17.80.1, but would not allow them to use Telnet?\n\naccess-list 103 deny tcp host 192.168.10.0 any eq 23\n\naccess-list 103 permit tcp host 192.168.10.1 eq 80\naccess-list 103 permit tcp 192.168.10.0 0.0.0.255 any eq 80\n\naccess-list 103 deny tcp 192.168.10.0 0.0.0.255 any eq 23\naccess-list 103 permit 192.168.10.0 0.0.0.255 host 172.17.80.1\n\naccess-list 103 deny tcp 192.168.10.0 0.0.0.255 any eq telnet\naccess-list 103 permit tcp 192.168.10.0 0.0.0.255 host 172.17.80.1 eq 80\n\naccess-list 103 deny tcp 192.168.10.0 0.0.0.255 any eq 23\nExplanation: Topic 5.4.2\n\nFor an extended ACL to meet these requirements the following need to be included in the access control entries:\n\nidentification number in the range 100-199 or 2000-2699\npermit or deny parameter\nprotocol\nsource address and wildcard\ndestination address and wildcard\nport number or name"
   },
   {
     "id": "Modules 3-5-35",
@@ -2100,6 +2306,26 @@ window.QUESTION_BANK = [
     "raw": "54. What is the term used to describe a potential danger to a company’s assets, data, or network functionality?\n\nvulnerability\nthreat\nasset\nexploit\nExplanation: Topic 3.1.1\n\nA threat is a potential danger to a company’s assets, data, or network functionality. An exploit is a mechanism that takes advantage of a vulnerability. A vulnerability is a weakness in a system, or its design, that could be exploited by a threat."
   },
   {
+    "id": "Modules 3-5-55",
+    "module": "Modules 3-5",
+    "number": 55,
+    "topic": "Security",
+    "question": "55. Refer to the exhibit. Network 192.168.30.0/24 contains all of the company servers. Policy dictates that traffic from the servers to both networks 192.168.10.0 and 192.168.11.0 be limited to replies for original requests. What is the best ACL type and placement to use in this situation?",
+    "choices": [
+      "extended ACL inbound on R3 G0/0",
+      "extended ACL inbound on R1 G0/0",
+      "standard ACL inbound on R1 G0/1",
+      "standard ACL inbound on R1 vty lines"
+    ],
+    "answers": [
+      "extended ACL inbound on R3 G0/0"
+    ],
+    "matching": null,
+    "explanation": "Explanation: Topic 5.4.6\n\nStandard ACLs permit or deny packets based only on the source IPv4 address. Because all traffic types are permitted or denied, standard ACLs should be located as close to the destination as possible.\nExtended ACLs permit or deny packets based on the source IPv4 address and destination IPv4 address, protocol type, source and destination TCP or UDP ports and more. Because the filtering of extended ACLs is so specific, extended ACLs should be located as close as possible to the source of the traffic to be filtered. Undesirable traffic is denied close to the source network without crossing the network infrastructure.",
+    "gradable": true,
+    "raw": "55. Refer to the exhibit. Network 192.168.30.0/24 contains all of the company servers. Policy dictates that traffic from the servers to both networks 192.168.10.0 and 192.168.11.0 be limited to replies for original requests. What is the best ACL type and placement to use in this situation?\n\nextended ACL inbound on R3 G0/0\nextended ACL inbound on R1 G0/0\nstandard ACL inbound on R1 G0/1\nstandard ACL inbound on R1 vty lines\nExplanation: Topic 5.4.6\n\nStandard ACLs permit or deny packets based only on the source IPv4 address. Because all traffic types are permitted or denied, standard ACLs should be located as close to the destination as possible.\nExtended ACLs permit or deny packets based on the source IPv4 address and destination IPv4 address, protocol type, source and destination TCP or UDP ports and more. Because the filtering of extended ACLs is so specific, extended ACLs should be located as close as possible to the source of the traffic to be filtered. Undesirable traffic is denied close to the source network without crossing the network infrastructure."
+  },
+  {
     "id": "Modules 3-5-56",
     "module": "Modules 3-5",
     "number": 56,
@@ -2119,6 +2345,26 @@ window.QUESTION_BANK = [
     "explanation": "Explanation: Topic 5.1.3",
     "gradable": true,
     "raw": "56. What does the CLI prompt change to after entering the command ip access-list standard aaa from global configuration mode?\n\nRouter(config-line)#\nRouter(config-std-nacl)#\nRouter(config)#\nRouter(config-router)#\nRouter(config-if)#\nExplanation: Topic 5.1.3"
+  },
+  {
+    "id": "Modules 3-5-57",
+    "module": "Modules 3-5",
+    "number": 57,
+    "topic": "Security",
+    "question": "57. Refer to the exhibit. Many employees are wasting company time accessing social media on their work computers. The company wants to stop this access. What is the best ACL type and placement to use in this situation?",
+    "choices": [
+      "extended ACL outbound on R2 WAN interface towards the internet",
+      "standard ACL outbound on R2 WAN interface towards the internet",
+      "standard ACL outbound on R2 S0/0/0",
+      "extended ACLs inbound on R1 G0/0 and G0/1"
+    ],
+    "answers": [
+      "extended ACLs inbound on R1 G0/0 and G0/1"
+    ],
+    "matching": null,
+    "explanation": "",
+    "gradable": true,
+    "raw": "57. Refer to the exhibit. Many employees are wasting company time accessing social media on their work computers. The company wants to stop this access. What is the best ACL type and placement to use in this situation?\n\nextended ACL outbound on R2 WAN interface towards the internet\nstandard ACL outbound on R2 WAN interface towards the internet\nstandard ACL outbound on R2 S0/0/0\nextended ACLs inbound on R1 G0/0 and G0/1"
   },
   {
     "id": "Modules 3-5-58",
@@ -2176,9 +2422,109 @@ window.QUESTION_BANK = [
       "0.3.255.255"
     ],
     "matching": null,
-    "explanation": "Explanation: Topic 4.2.3\n\nThe subnets 172.16.0.0 through 172.19.0.0 all share the same 14 high level bits. A wildcard mask in binary that matches 14 high order bits is 00000000.00000011.11111111.11111111. In dotted decimal this wild card mask is 0.3.255.255.\n61. What is the term used to describe gray hat hackers who publicly protest organizations or governments by posting articles, videos, leaking sensitive information, and performing network attacks?\n\nwhite hat hackers\ngrey hat hackers\nhacktivists\nstate-sponsored hacker\n\nExplanation: Topic 3.2.2\n\n62. A technician is tasked with using ACLs to secure a router. When would the technician use the no ip access-list 101 configuration option or command?\n\nto apply an ACL to all router interfaces\nto secure administrative access to the router\nto remove all ACLs from the router\nto remove a configured ACL\n\nExplanation: Topic 5.4.2\n\n63. What is the term used to describe unethical criminals who compromise computer and network security for personal gain, or for malicious reasons?\n\nhacktivists\nvulnerability broker\nblack hat hackers\nscript kiddies\n\nExplanation: Topic 3.2.1\n\nBlack hat hackers are unethical threat actors who use their skills to compromise computer and network security vulnerabilities. The goal is usually financial gain or personal gain, or the hacker may have malicious intent. A vulnerability broker is a gray hat hacker who attempts to discover exploits and report them to vendors, sometimes for prizes or rewards. Hacktivists are gray hat hackers who publicly protest organizations or governments by posting articles or videos, leaking sensitive information, and performing network attacks. Script kiddies are inexperienced hackers (sometimes teenagers) running existing scripts, tools, and exploits to cause harm—but typically not for profit.\n64. What is the term used to describe a guarantee that the message is not a forgery and does actually come from whom it states?\n\norigin authentication\nmitigation\nexploit\ndata non-repudiation\n\nExplanation: Topic 3.10.2\n\n65. A technician is tasked with using ACLs to secure a router. When would the technician use the ip access-group 101 in configuration option or command?\n\nto secure administrative access to the router\nto apply an extended ACL to an interface\nto display all restricted traffic\nto secure management traffic into the router\n\nExplanation: Topic 5.4.2",
+    "explanation": "Explanation: Topic 4.2.3\n\nThe subnets 172.16.0.0 through 172.19.0.0 all share the same 14 high level bits. A wildcard mask in binary that matches 14 high order bits is 00000000.00000011.11111111.11111111. In dotted decimal this wild card mask is 0.3.255.255.",
     "gradable": true,
-    "raw": "60. What wild card mask will match networks 172.16.0.0 through 172.19.0.0?\n\n0.0.3.255\n0.252.255.255\n0.3.255.255\n0.0.255.255\nExplanation: Topic 4.2.3\n\nThe subnets 172.16.0.0 through 172.19.0.0 all share the same 14 high level bits. A wildcard mask in binary that matches 14 high order bits is 00000000.00000011.11111111.11111111. In dotted decimal this wild card mask is 0.3.255.255.\n61. What is the term used to describe gray hat hackers who publicly protest organizations or governments by posting articles, videos, leaking sensitive information, and performing network attacks?\n\nwhite hat hackers\ngrey hat hackers\nhacktivists\nstate-sponsored hacker\n\nExplanation: Topic 3.2.2\n\n62. A technician is tasked with using ACLs to secure a router. When would the technician use the no ip access-list 101 configuration option or command?\n\nto apply an ACL to all router interfaces\nto secure administrative access to the router\nto remove all ACLs from the router\nto remove a configured ACL\n\nExplanation: Topic 5.4.2\n\n63. What is the term used to describe unethical criminals who compromise computer and network security for personal gain, or for malicious reasons?\n\nhacktivists\nvulnerability broker\nblack hat hackers\nscript kiddies\n\nExplanation: Topic 3.2.1\n\nBlack hat hackers are unethical threat actors who use their skills to compromise computer and network security vulnerabilities. The goal is usually financial gain or personal gain, or the hacker may have malicious intent. A vulnerability broker is a gray hat hacker who attempts to discover exploits and report them to vendors, sometimes for prizes or rewards. Hacktivists are gray hat hackers who publicly protest organizations or governments by posting articles or videos, leaking sensitive information, and performing network attacks. Script kiddies are inexperienced hackers (sometimes teenagers) running existing scripts, tools, and exploits to cause harm—but typically not for profit.\n64. What is the term used to describe a guarantee that the message is not a forgery and does actually come from whom it states?\n\norigin authentication\nmitigation\nexploit\ndata non-repudiation\n\nExplanation: Topic 3.10.2\n\n65. A technician is tasked with using ACLs to secure a router. When would the technician use the ip access-group 101 in configuration option or command?\n\nto secure administrative access to the router\nto apply an extended ACL to an interface\nto display all restricted traffic\nto secure management traffic into the router\n\nExplanation: Topic 5.4.2"
+    "raw": "60. What wild card mask will match networks 172.16.0.0 through 172.19.0.0?\n\n0.0.3.255\n0.252.255.255\n0.3.255.255\n0.0.255.255\nExplanation: Topic 4.2.3\n\nThe subnets 172.16.0.0 through 172.19.0.0 all share the same 14 high level bits. A wildcard mask in binary that matches 14 high order bits is 00000000.00000011.11111111.11111111. In dotted decimal this wild card mask is 0.3.255.255."
+  },
+  {
+    "id": "Modules 3-5-61",
+    "module": "Modules 3-5",
+    "number": 61,
+    "topic": "Security",
+    "question": "61. What is the term used to describe gray hat hackers who publicly protest organizations or governments by posting articles, videos, leaking sensitive information, and performing network attacks?",
+    "choices": [
+      "white hat hackers",
+      "grey hat hackers",
+      "hacktivists",
+      "state-sponsored hacker"
+    ],
+    "answers": [
+      "hacktivists"
+    ],
+    "matching": null,
+    "explanation": "Explanation: Topic 3.2.2",
+    "gradable": true,
+    "raw": "61. What is the term used to describe gray hat hackers who publicly protest organizations or governments by posting articles, videos, leaking sensitive information, and performing network attacks?\n\nwhite hat hackers\ngrey hat hackers\nhacktivists\nstate-sponsored hacker\nExplanation: Topic 3.2.2"
+  },
+  {
+    "id": "Modules 3-5-62",
+    "module": "Modules 3-5",
+    "number": 62,
+    "topic": "Security",
+    "question": "62. A technician is tasked with using ACLs to secure a router. When would the technician use the no ip access-list 101 configuration option or command?",
+    "choices": [
+      "to apply an ACL to all router interfaces",
+      "to secure administrative access to the router",
+      "to remove all ACLs from the router",
+      "to remove a configured ACL"
+    ],
+    "answers": [
+      "to remove a configured ACL"
+    ],
+    "matching": null,
+    "explanation": "Explanation: Topic 5.4.2",
+    "gradable": true,
+    "raw": "62. A technician is tasked with using ACLs to secure a router. When would the technician use the no ip access-list 101 configuration option or command?\n\nto apply an ACL to all router interfaces\nto secure administrative access to the router\nto remove all ACLs from the router\nto remove a configured ACL\nExplanation: Topic 5.4.2"
+  },
+  {
+    "id": "Modules 3-5-63",
+    "module": "Modules 3-5",
+    "number": 63,
+    "topic": "Security",
+    "question": "63. What is the term used to describe unethical criminals who compromise computer and network security for personal gain, or for malicious reasons?",
+    "choices": [
+      "hacktivists",
+      "vulnerability broker",
+      "black hat hackers",
+      "script kiddies"
+    ],
+    "answers": [
+      "black hat hackers"
+    ],
+    "matching": null,
+    "explanation": "Explanation: Topic 3.2.1\n\nBlack hat hackers are unethical threat actors who use their skills to compromise computer and network security vulnerabilities. The goal is usually financial gain or personal gain, or the hacker may have malicious intent. A vulnerability broker is a gray hat hacker who attempts to discover exploits and report them to vendors, sometimes for prizes or rewards. Hacktivists are gray hat hackers who publicly protest organizations or governments by posting articles or videos, leaking sensitive information, and performing network attacks. Script kiddies are inexperienced hackers (sometimes teenagers) running existing scripts, tools, and exploits to cause harm—but typically not for profit.",
+    "gradable": true,
+    "raw": "63. What is the term used to describe unethical criminals who compromise computer and network security for personal gain, or for malicious reasons?\n\nhacktivists\nvulnerability broker\nblack hat hackers\nscript kiddies\nExplanation: Topic 3.2.1\n\nBlack hat hackers are unethical threat actors who use their skills to compromise computer and network security vulnerabilities. The goal is usually financial gain or personal gain, or the hacker may have malicious intent. A vulnerability broker is a gray hat hacker who attempts to discover exploits and report them to vendors, sometimes for prizes or rewards. Hacktivists are gray hat hackers who publicly protest organizations or governments by posting articles or videos, leaking sensitive information, and performing network attacks. Script kiddies are inexperienced hackers (sometimes teenagers) running existing scripts, tools, and exploits to cause harm—but typically not for profit."
+  },
+  {
+    "id": "Modules 3-5-64",
+    "module": "Modules 3-5",
+    "number": 64,
+    "topic": "Security",
+    "question": "64. What is the term used to describe a guarantee that the message is not a forgery and does actually come from whom it states?",
+    "choices": [
+      "origin authentication",
+      "mitigation",
+      "exploit",
+      "data non-repudiation"
+    ],
+    "answers": [
+      "origin authentication"
+    ],
+    "matching": null,
+    "explanation": "Explanation: Topic 3.10.2",
+    "gradable": true,
+    "raw": "64. What is the term used to describe a guarantee that the message is not a forgery and does actually come from whom it states?\n\norigin authentication\nmitigation\nexploit\ndata non-repudiation\nExplanation: Topic 3.10.2"
+  },
+  {
+    "id": "Modules 3-5-65",
+    "module": "Modules 3-5",
+    "number": 65,
+    "topic": "Security",
+    "question": "65. A technician is tasked with using ACLs to secure a router. When would the technician use the ip access-group 101 in configuration option or command?",
+    "choices": [
+      "to secure administrative access to the router",
+      "to apply an extended ACL to an interface",
+      "to display all restricted traffic",
+      "to secure management traffic into the router"
+    ],
+    "answers": [
+      "to apply an extended ACL to an interface"
+    ],
+    "matching": null,
+    "explanation": "Explanation: Topic 5.4.2",
+    "gradable": true,
+    "raw": "65. A technician is tasked with using ACLs to secure a router. When would the technician use the ip access-group 101 in configuration option or command?\n\nto secure administrative access to the router\nto apply an extended ACL to an interface\nto display all restricted traffic\nto secure management traffic into the router\nExplanation: Topic 5.4.2"
   },
   {
     "id": "Modules 3-5-66",
@@ -2196,9 +2542,109 @@ window.QUESTION_BANK = [
       "to add a text entry for documentation purposes"
     ],
     "matching": null,
-    "explanation": "Explanation: Topic 5.1.2\n\n67. Refer to the exhibit. The company CEO demands that one ACL be created to permit email traffic to the internet and deny FTP access. What is the best ACL type and placement to use in this situation?\n\nextended ACL outbound on R2 WAN interface towards the internet\nstandard ACL outbound on R2 S0/0/0\nextended ACL inbound on R2 S0/0/0\nstandard ACL inbound on R2 WAN interface connecting to the internet\n\nExplanation: Topic 4.4.1\nACL Type: An extended ACL is required because the CEO's demand involves filtering traffic based on specific applications (email and FTP), which necessitates inspecting Layer 4 protocol and port information. Standard ACLs are insufficient as they only filter based on the source IPv4 address.\nPlacement: To satisfy the requirement of using only one ACL to control traffic from multiple internal segments (R1's LANs and R3's Server), the ACL must be placed at a common exit point. Applying the ACL outbound on the R2 WAN interface ensures that all traffic from the entire organization is inspected and filtered before it enters the internet.\n\n68. A technician is tasked with using ACLs to secure a router. When would the technician use the established configuration option or command?\n\nto add a text entry for documentation purposes\nto display all restricted traffic\nto allow specified traffic through an interface\nto allow returning reply traffic to enter the internal network\n\nExplanation: Topic 5.4.6\n\n69. A technician is tasked with using ACLs to secure a router. When would the technician use the deny configuration option or command?\n\nto identify one specific IP address\nto display all restricted traffic\nto restrict specific traffic access through an interface\nto generate and send an informational message whenever the ACE is matched\n\nExplanation: Topic 5.1.2\n\n70. Refer to the exhibit. Only authorized remote users are allowed remote access to the company server 192.168.30.10. What is the best ACL type and placement to use in this situation?\n\nextended ACLs inbound on R1 G0/0 and G0/1\nextended ACL outbound on R2 WAN interface towards the internet\nextended ACL inbound on R2 S0/0/0\nextended ACL inbound on R2 WAN interface connected to the internet\n\nExplanation: Topic 4.4.5\n\n71. Refer to the exhibit. Employees on 192.168.11.0/24 work on critically sensitive information and are not allowed access off their network. What is the best ACL type and placement to use in this situation?\n\nstandard ACL inbound on R1 vty lines\nextended ACL inbound on R1 G0/0\nstandard ACL inbound on R1 G0/1\nextended ACL inbound on R3 S0/0/1\n\nExplanation: Topic 4.4.3\n\nA standard ACL is the best choice here because the security policy requires filtering traffic based solely on the source IP address (the 192.168.11.0/24 network). Placing the ACL inbound on the R1 G0/1 interface is most efficient because it discards unauthorized packets immediately upon entering the router. This \"close to the source\" placement prevents unwanted traffic from consuming any routing resources or bandwidth on the rest of the network.",
+    "explanation": "Explanation: Topic 5.1.2",
     "gradable": true,
-    "raw": "66. A technician is tasked with using ACLs to secure a router. When would the technician use the remark configuration option or command?\n\nto generate and send an informational message whenever the ACE is matched\nto add a text entry for documentation purposes\nto identify one specific IP address\nto restrict specific traffic access through an interface\nExplanation: Topic 5.1.2\n\n67. Refer to the exhibit. The company CEO demands that one ACL be created to permit email traffic to the internet and deny FTP access. What is the best ACL type and placement to use in this situation?\n\nextended ACL outbound on R2 WAN interface towards the internet\nstandard ACL outbound on R2 S0/0/0\nextended ACL inbound on R2 S0/0/0\nstandard ACL inbound on R2 WAN interface connecting to the internet\n\nExplanation: Topic 4.4.1\nACL Type: An extended ACL is required because the CEO's demand involves filtering traffic based on specific applications (email and FTP), which necessitates inspecting Layer 4 protocol and port information. Standard ACLs are insufficient as they only filter based on the source IPv4 address.\nPlacement: To satisfy the requirement of using only one ACL to control traffic from multiple internal segments (R1's LANs and R3's Server), the ACL must be placed at a common exit point. Applying the ACL outbound on the R2 WAN interface ensures that all traffic from the entire organization is inspected and filtered before it enters the internet.\n\n68. A technician is tasked with using ACLs to secure a router. When would the technician use the established configuration option or command?\n\nto add a text entry for documentation purposes\nto display all restricted traffic\nto allow specified traffic through an interface\nto allow returning reply traffic to enter the internal network\n\nExplanation: Topic 5.4.6\n\n69. A technician is tasked with using ACLs to secure a router. When would the technician use the deny configuration option or command?\n\nto identify one specific IP address\nto display all restricted traffic\nto restrict specific traffic access through an interface\nto generate and send an informational message whenever the ACE is matched\n\nExplanation: Topic 5.1.2\n\n70. Refer to the exhibit. Only authorized remote users are allowed remote access to the company server 192.168.30.10. What is the best ACL type and placement to use in this situation?\n\nextended ACLs inbound on R1 G0/0 and G0/1\nextended ACL outbound on R2 WAN interface towards the internet\nextended ACL inbound on R2 S0/0/0\nextended ACL inbound on R2 WAN interface connected to the internet\n\nExplanation: Topic 4.4.5\n\n71. Refer to the exhibit. Employees on 192.168.11.0/24 work on critically sensitive information and are not allowed access off their network. What is the best ACL type and placement to use in this situation?\n\nstandard ACL inbound on R1 vty lines\nextended ACL inbound on R1 G0/0\nstandard ACL inbound on R1 G0/1\nextended ACL inbound on R3 S0/0/1\n\nExplanation: Topic 4.4.3\n\nA standard ACL is the best choice here because the security policy requires filtering traffic based solely on the source IP address (the 192.168.11.0/24 network). Placing the ACL inbound on the R1 G0/1 interface is most efficient because it discards unauthorized packets immediately upon entering the router. This \"close to the source\" placement prevents unwanted traffic from consuming any routing resources or bandwidth on the rest of the network."
+    "raw": "66. A technician is tasked with using ACLs to secure a router. When would the technician use the remark configuration option or command?\n\nto generate and send an informational message whenever the ACE is matched\nto add a text entry for documentation purposes\nto identify one specific IP address\nto restrict specific traffic access through an interface\nExplanation: Topic 5.1.2"
+  },
+  {
+    "id": "Modules 3-5-67",
+    "module": "Modules 3-5",
+    "number": 67,
+    "topic": "Security",
+    "question": "67. Refer to the exhibit. The company CEO demands that one ACL be created to permit email traffic to the internet and deny FTP access. What is the best ACL type and placement to use in this situation?",
+    "choices": [
+      "extended ACL outbound on R2 WAN interface towards the internet",
+      "standard ACL outbound on R2 S0/0/0",
+      "extended ACL inbound on R2 S0/0/0",
+      "standard ACL inbound on R2 WAN interface connecting to the internet"
+    ],
+    "answers": [
+      "extended ACL outbound on R2 WAN interface towards the internet"
+    ],
+    "matching": null,
+    "explanation": "",
+    "gradable": true,
+    "raw": "67. Refer to the exhibit. The company CEO demands that one ACL be created to permit email traffic to the internet and deny FTP access. What is the best ACL type and placement to use in this situation?\n\nextended ACL outbound on R2 WAN interface towards the internet\nstandard ACL outbound on R2 S0/0/0\nextended ACL inbound on R2 S0/0/0\nstandard ACL inbound on R2 WAN interface connecting to the internet"
+  },
+  {
+    "id": "Modules 3-5-68",
+    "module": "Modules 3-5",
+    "number": 68,
+    "topic": "Security",
+    "question": "68. A technician is tasked with using ACLs to secure a router. When would the technician use the established configuration option or command?",
+    "choices": [
+      "to add a text entry for documentation purposes",
+      "to display all restricted traffic",
+      "to allow specified traffic through an interface",
+      "to allow returning reply traffic to enter the internal network"
+    ],
+    "answers": [
+      "to allow returning reply traffic to enter the internal network"
+    ],
+    "matching": null,
+    "explanation": "Explanation: Topic 5.4.6",
+    "gradable": true,
+    "raw": "68. A technician is tasked with using ACLs to secure a router. When would the technician use the established configuration option or command?\n\nto add a text entry for documentation purposes\nto display all restricted traffic\nto allow specified traffic through an interface\nto allow returning reply traffic to enter the internal network\nExplanation: Topic 5.4.6"
+  },
+  {
+    "id": "Modules 3-5-69",
+    "module": "Modules 3-5",
+    "number": 69,
+    "topic": "Security",
+    "question": "69. A technician is tasked with using ACLs to secure a router. When would the technician use the deny configuration option or command?",
+    "choices": [
+      "to identify one specific IP address",
+      "to display all restricted traffic",
+      "to restrict specific traffic access through an interface",
+      "to generate and send an informational message whenever the ACE is matched"
+    ],
+    "answers": [
+      "to restrict specific traffic access through an interface"
+    ],
+    "matching": null,
+    "explanation": "Explanation: Topic 5.1.2",
+    "gradable": true,
+    "raw": "69. A technician is tasked with using ACLs to secure a router. When would the technician use the deny configuration option or command?\n\nto identify one specific IP address\nto display all restricted traffic\nto restrict specific traffic access through an interface\nto generate and send an informational message whenever the ACE is matched\nExplanation: Topic 5.1.2"
+  },
+  {
+    "id": "Modules 3-5-70",
+    "module": "Modules 3-5",
+    "number": 70,
+    "topic": "Security",
+    "question": "70. Refer to the exhibit. Only authorized remote users are allowed remote access to the company server 192.168.30.10. What is the best ACL type and placement to use in this situation?",
+    "choices": [
+      "extended ACLs inbound on R1 G0/0 and G0/1",
+      "extended ACL outbound on R2 WAN interface towards the internet",
+      "extended ACL inbound on R2 S0/0/0",
+      "extended ACL inbound on R2 WAN interface connected to the internet"
+    ],
+    "answers": [
+      "extended ACL inbound on R2 WAN interface connected to the internet"
+    ],
+    "matching": null,
+    "explanation": "Explanation: Topic 4.4.5",
+    "gradable": true,
+    "raw": "70. Refer to the exhibit. Only authorized remote users are allowed remote access to the company server 192.168.30.10. What is the best ACL type and placement to use in this situation?\n\nextended ACLs inbound on R1 G0/0 and G0/1\nextended ACL outbound on R2 WAN interface towards the internet\nextended ACL inbound on R2 S0/0/0\nextended ACL inbound on R2 WAN interface connected to the internet\nExplanation: Topic 4.4.5"
+  },
+  {
+    "id": "Modules 3-5-71",
+    "module": "Modules 3-5",
+    "number": 71,
+    "topic": "Security",
+    "question": "71. Refer to the exhibit. Employees on 192.168.11.0/24 work on critically sensitive information and are not allowed access off their network. What is the best ACL type and placement to use in this situation?",
+    "choices": [
+      "standard ACL inbound on R1 vty lines",
+      "extended ACL inbound on R1 G0/0",
+      "standard ACL inbound on R1 G0/1",
+      "extended ACL inbound on R3 S0/0/1"
+    ],
+    "answers": [
+      "standard ACL inbound on R1 G0/1"
+    ],
+    "matching": null,
+    "explanation": "Explanation: Topic 4.4.3\n\nA standard ACL is the best choice here because the security policy requires filtering traffic based solely on the source IP address (the 192.168.11.0/24 network). Placing the ACL inbound on the R1 G0/1 interface is most efficient because it discards unauthorized packets immediately upon entering the router. This \"close to the source\" placement prevents unwanted traffic from consuming any routing resources or bandwidth on the rest of the network.",
+    "gradable": true,
+    "raw": "71. Refer to the exhibit. Employees on 192.168.11.0/24 work on critically sensitive information and are not allowed access off their network. What is the best ACL type and placement to use in this situation?\n\nstandard ACL inbound on R1 vty lines\nextended ACL inbound on R1 G0/0\nstandard ACL inbound on R1 G0/1\nextended ACL inbound on R3 S0/0/1\nExplanation: Topic 4.4.3\n\nA standard ACL is the best choice here because the security policy requires filtering traffic based solely on the source IP address (the 192.168.11.0/24 network). Placing the ACL inbound on the R1 G0/1 interface is most efficient because it discards unauthorized packets immediately upon entering the router. This \"close to the source\" placement prevents unwanted traffic from consuming any routing resources or bandwidth on the rest of the network."
   },
   {
     "id": "Modules 3-5-72",
@@ -2216,9 +2662,49 @@ window.QUESTION_BANK = [
       "to identify one specific IP address"
     ],
     "matching": null,
-    "explanation": "Explanation: Topic 4.2.4\n\n73. What commonly motivates cybercriminals to attack networks as compared to hacktivists or state-sponsored hackers?\n\nfinancial gain\npolitical reasons\nfame seeking\nstatus among peers\n\nExplanation: Topic 3.2.3\n\nCybercriminals are commonly motivated by money. Hackers are known to hack for status. Cyberterrorists are motivated to commit cybercrimes for religious or political reasons.\n74. Refer to the exhibit. The company has provided IP phones to employees on the 192.168.10.0/24 network and the voice traffic will need priority over data traffic. What is the best ACL type and placement to use in this situation?\n\nextended ACL inbound on R1 G0/0\nextended ACL outbound on R2 WAN interface towards the internet\nextended ACL outbound on R2 S0/0/1\nextended ACLs inbound on R1 G0/0 and G0/1\n\nExplanation: Topic 4.4.3\n\nStandard ACLs permit or deny packets based only on the source IPv4 address. Because all traffic types are permitted or denied, standard ACLs should be located as close to the destination as possible.\nExtended ACLs permit or deny packets based on the source IPv4 address and destination IPv4 address, protocol type, source and destination TCP or UDP ports and more. Because the filtering of extended ACLs is so specific, extended ACLs should be located as close as possible to the source of the traffic to be filtered. Undesirable traffic is denied close to the source network without crossing the network infrastructure.\nEnterprise Networking, Security, and Automation (Version 7.00) - Network Security Exam PDF File\n\n\t\tPost navigation\n\t\t← Previous Article CCNA 3 v7 Modules 1 - 2: OSPF Concepts and Configuration Exam AnswersNext Article → CCNA 3 v7 Modules 6 - 8: WAN Concepts Exam Answers",
+    "explanation": "Explanation: Topic 4.2.4",
     "gradable": true,
-    "raw": "72. A technician is tasked with using ACLs to secure a router. When would the technician use the host configuration option or command?\n\nto add a text entry for documentation purposes\nto generate and send an informational message whenever the ACE is matched\nto identify any IP address\nto identify one specific IP address\nExplanation: Topic 4.2.4\n\n73. What commonly motivates cybercriminals to attack networks as compared to hacktivists or state-sponsored hackers?\n\nfinancial gain\npolitical reasons\nfame seeking\nstatus among peers\n\nExplanation: Topic 3.2.3\n\nCybercriminals are commonly motivated by money. Hackers are known to hack for status. Cyberterrorists are motivated to commit cybercrimes for religious or political reasons.\n74. Refer to the exhibit. The company has provided IP phones to employees on the 192.168.10.0/24 network and the voice traffic will need priority over data traffic. What is the best ACL type and placement to use in this situation?\n\nextended ACL inbound on R1 G0/0\nextended ACL outbound on R2 WAN interface towards the internet\nextended ACL outbound on R2 S0/0/1\nextended ACLs inbound on R1 G0/0 and G0/1\n\nExplanation: Topic 4.4.3\n\nStandard ACLs permit or deny packets based only on the source IPv4 address. Because all traffic types are permitted or denied, standard ACLs should be located as close to the destination as possible.\nExtended ACLs permit or deny packets based on the source IPv4 address and destination IPv4 address, protocol type, source and destination TCP or UDP ports and more. Because the filtering of extended ACLs is so specific, extended ACLs should be located as close as possible to the source of the traffic to be filtered. Undesirable traffic is denied close to the source network without crossing the network infrastructure.\nEnterprise Networking, Security, and Automation (Version 7.00) - Network Security Exam PDF File\n\n\t\tPost navigation\n\t\t← Previous Article CCNA 3 v7 Modules 1 - 2: OSPF Concepts and Configuration Exam AnswersNext Article → CCNA 3 v7 Modules 6 - 8: WAN Concepts Exam Answers"
+    "raw": "72. A technician is tasked with using ACLs to secure a router. When would the technician use the host configuration option or command?\n\nto add a text entry for documentation purposes\nto generate and send an informational message whenever the ACE is matched\nto identify any IP address\nto identify one specific IP address\nExplanation: Topic 4.2.4"
+  },
+  {
+    "id": "Modules 3-5-73",
+    "module": "Modules 3-5",
+    "number": 73,
+    "topic": "Security",
+    "question": "73. What commonly motivates cybercriminals to attack networks as compared to hacktivists or state-sponsored hackers?",
+    "choices": [
+      "financial gain",
+      "political reasons",
+      "fame seeking",
+      "status among peers"
+    ],
+    "answers": [
+      "financial gain"
+    ],
+    "matching": null,
+    "explanation": "Explanation: Topic 3.2.3\n\nCybercriminals are commonly motivated by money. Hackers are known to hack for status. Cyberterrorists are motivated to commit cybercrimes for religious or political reasons.",
+    "gradable": true,
+    "raw": "73. What commonly motivates cybercriminals to attack networks as compared to hacktivists or state-sponsored hackers?\n\nfinancial gain\npolitical reasons\nfame seeking\nstatus among peers\nExplanation: Topic 3.2.3\n\nCybercriminals are commonly motivated by money. Hackers are known to hack for status. Cyberterrorists are motivated to commit cybercrimes for religious or political reasons."
+  },
+  {
+    "id": "Modules 3-5-74",
+    "module": "Modules 3-5",
+    "number": 74,
+    "topic": "Security",
+    "question": "74. Refer to the exhibit. The company has provided IP phones to employees on the 192.168.10.0/24 network and the voice traffic will need priority over data traffic. What is the best ACL type and placement to use in this situation?",
+    "choices": [
+      "extended ACL inbound on R1 G0/0",
+      "extended ACL outbound on R2 WAN interface towards the internet",
+      "extended ACL outbound on R2 S0/0/1",
+      "extended ACLs inbound on R1 G0/0 and G0/1"
+    ],
+    "answers": [
+      "extended ACL inbound on R1 G0/0"
+    ],
+    "matching": null,
+    "explanation": "Explanation: Topic 4.4.3\n\nStandard ACLs permit or deny packets based only on the source IPv4 address. Because all traffic types are permitted or denied, standard ACLs should be located as close to the destination as possible.\nExtended ACLs permit or deny packets based on the source IPv4 address and destination IPv4 address, protocol type, source and destination TCP or UDP ports and more. Because the filtering of extended ACLs is so specific, extended ACLs should be located as close as possible to the source of the traffic to be filtered. Undesirable traffic is denied close to the source network without crossing the network infrastructure.\nEnterprise Networking, Security, and Automation (Version 7.00) - Network Security Exam PDF File\n\n\t\tPost navigation\n\t\t← Previous Article CCNA 3 v7 Modules 1 - 2: OSPF Concepts and Configuration Exam AnswersNext Article → CCNA 3 v7 Modules 6 - 8: WAN Concepts Exam Answers",
+    "gradable": true,
+    "raw": "74. Refer to the exhibit. The company has provided IP phones to employees on the 192.168.10.0/24 network and the voice traffic will need priority over data traffic. What is the best ACL type and placement to use in this situation?\n\nextended ACL inbound on R1 G0/0\nextended ACL outbound on R2 WAN interface towards the internet\nextended ACL outbound on R2 S0/0/1\nextended ACLs inbound on R1 G0/0 and G0/1\nExplanation: Topic 4.4.3\n\nStandard ACLs permit or deny packets based only on the source IPv4 address. Because all traffic types are permitted or denied, standard ACLs should be located as close to the destination as possible.\nExtended ACLs permit or deny packets based on the source IPv4 address and destination IPv4 address, protocol type, source and destination TCP or UDP ports and more. Because the filtering of extended ACLs is so specific, extended ACLs should be located as close as possible to the source of the traffic to be filtered. Undesirable traffic is denied close to the source network without crossing the network infrastructure.\nEnterprise Networking, Security, and Automation (Version 7.00) - Network Security Exam PDF File\n\n\t\tPost navigation\n\t\t← Previous Article CCNA 3 v7 Modules 1 - 2: OSPF Concepts and Configuration Exam AnswersNext Article → CCNA 3 v7 Modules 6 - 8: WAN Concepts Exam Answers"
   },
   {
     "id": "Modules 6-8-1",
