@@ -3,7 +3,7 @@ const fs = require("fs");
 const sources = [
   { module: "Modules 1-2", file: "source-modules-1-2.html" },
   { module: "Modules 3-5", file: "source-modules-3-5.html" },
-  { module: "Modules 6-8", file: "source-questions.txt" }
+  { module: "Modules 6-8", file: "source-modules-6-8.html" }
 ];
 
 const manualMatching = {
@@ -105,6 +105,14 @@ function stripTags(value) {
   return decodeHtml(value.replace(/<br\s*\/?>/gi, "\n").replace(/<[^>]+>/g, "")).replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
 }
 
+function extractImages(block) {
+  return [...block.matchAll(/<img[^>]+src=["']([^"']+)["'][^>]*>/gi)]
+    .map((match) => decodeHtml(match[1]))
+    .filter((src) => /^https?:\/\//i.test(src))
+    .filter((src) => /\/wp-content\/uploads\//i.test(src))
+    .filter((src) => !/itexam-1|gravatar|itexam-fa|Touch-icon|Metro-icon/i.test(src));
+}
+
 function parseHtmlQuestions(html, moduleName) {
   const start = html.search(/<p><(?:strong|b)>\s*1\./i);
   const end = html.search(/<h[1-6][^>]*>About The Author/i);
@@ -112,10 +120,12 @@ function parseHtmlQuestions(html, moduleName) {
   const blocks = body.split(/(?=<p><(?:strong|b)>\s*\d+\.)/i).filter((block) => /^\s*<p><(?:strong|b)>\s*\d+\./i.test(block));
 
   return blocks.map((block) => {
-    const questionMatch = block.match(/<p><(?:strong|b)>\s*(\d+)\.\s*([\s\S]*?)<\/(?:strong|b)>[\s\S]*?<\/p>/i);
+    const questionMatch = block.match(/<p[^>]*>([\s\S]*?)<\/p>/i);
     if (!questionMatch) return null;
-    const number = Number(questionMatch[1]);
-    const question = stripTags(`${number}. ${questionMatch[2]}`);
+    const question = stripTags(questionMatch[1]).replace(/^(\d+)\.\s+/, "$1. ");
+    const number = Number(question.match(/^(\d+)\./)?.[1]);
+    if (!number) return null;
+    const images = extractImages(block);
     const listMatch = block.match(/<ul[^>]*>([\s\S]*?)<\/ul>/i);
     const tableMatch = block.match(/<table[^>]*>([\s\S]*?)<\/table>/i);
     const choices = [];
@@ -149,6 +159,8 @@ function parseHtmlQuestions(html, moduleName) {
       }
     }
 
+    matching = manualMatching[moduleName]?.[number] || matching;
+
     const explanationMatch = block.match(/<div class="message_box success">([\s\S]*?)(?=<p><strong>\s*\d+\.|$)/i);
     const explanation = explanationMatch ? stripTags(explanationMatch[1]).replace(/^Explanation:\s*/i, "Explanation: ") : "";
 
@@ -161,6 +173,7 @@ function parseHtmlQuestions(html, moduleName) {
       choices,
       answers,
       matching,
+      images,
       explanation,
       gradable: Boolean(matching) || (choices.length > 0 && answers.length > 0),
       raw: `${question}\n\n${choices.join("\n")}\n${explanation}`.trim()

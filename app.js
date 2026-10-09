@@ -618,6 +618,7 @@ function renderQuestion() {
   els.multiBadge.textContent = q.sourceMode || (q.matching ? "Match" : q.answers.length > 1 ? `Choose ${q.answers.length}` : q.gradable ? "Choose 1" : "Review");
   els.questionText.textContent = q.question;
   els.answers.innerHTML = "";
+  renderExhibits(q);
 
   if (!q.gradable) {
     const raw = document.createElement("pre");
@@ -656,6 +657,26 @@ function renderQuestion() {
   });
 
   startTimer();
+}
+
+function renderExhibits(q) {
+  const images = q.images || (q.image ? [q.image] : []);
+  if (!images.length) return;
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "exhibit-gallery";
+
+  images.forEach((src, index) => {
+    const image = document.createElement("img");
+    image.className = "exhibit-image";
+    image.src = src;
+    image.alt = `Exhibit for ${q.question.replace(/^\d+\.\s*/, "")}${images.length > 1 ? ` ${index + 1}` : ""}`;
+    image.loading = "lazy";
+    image.decoding = "async";
+    wrapper.append(image);
+  });
+
+  els.answers.append(wrapper);
 }
 
 function renderTypedQuestion(q) {

@@ -444,6 +444,27 @@ select {
   margin-top: 22px;
 }
 
+.exhibit-gallery {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(7, 10, 18, 0.55);
+}
+
+.exhibit-image {
+  display: block;
+  max-width: 100%;
+  max-height: min(48vh, 520px);
+  width: auto;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 6px;
+  background: white;
+  object-fit: contain;
+}
+
 .answer-btn {
   display: grid;
   grid-template-columns: 42px minmax(0, 1fr);
