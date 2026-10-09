@@ -441,7 +441,9 @@ function buildPracticeBank() {
 
 function updateBankSize() {
   if (!state.allQuestions.length) return;
-  els.bankSize.textContent = buildPracticeBank().length;
+  const size = buildPracticeBank().length;
+  els.bankSize.textContent = size;
+  els.startBtn.disabled = size === 0;
 }
 
 function canMakeTypedQuestion(q) {
@@ -575,6 +577,7 @@ function blankAnswer(text, answer) {
 
 function buildSession(source = null) {
   const bank = source || buildPracticeBank();
+  if (!bank.length) return false;
 
   const requested = els.questionCount.value;
   const count = requested === "all" ? bank.length : Number(requested);
@@ -585,11 +588,12 @@ function buildSession(source = null) {
   state.streak = 0;
   state.answered = false;
   state.timerSeconds = Number(els.timerMode.value);
+  return true;
 }
 
 function startQuiz(source = null) {
   audio.start();
-  buildSession(source);
+  if (!buildSession(source)) return;
   showOnly(els.quizScreen);
   renderQuestion();
 }
@@ -962,6 +966,8 @@ function updateTopicButton(values, allChecked) {
   const label = els.topicSelectButton.querySelector("span");
   if (allChecked) {
     label.textContent = "All Modules";
+  } else if (values.length === 0) {
+    label.textContent = "No modules selected";
   } else if (values.length === 1) {
     label.textContent = values[0];
   } else {
@@ -979,11 +985,7 @@ function syncTopicSelection(changedInput = null) {
     allInput.checked = topicInputs.every((input) => input.checked);
   }
 
-  let values = selectedTopicValues();
-  if (!values.length) {
-    setAllTopics(true);
-    values = selectedTopicValues();
-  }
+  const values = selectedTopicValues();
 
   if (allInput.checked || values.length === topicInputs.length) {
     state.topics = new Set(["all"]);
