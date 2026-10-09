@@ -152,6 +152,7 @@ const els = {
   resultsScreen: document.querySelector("#resultsScreen"),
   questionCount: document.querySelector("#questionCount"),
   timerMode: document.querySelector("#timerMode"),
+  topicSelect: document.querySelector("#topicSelect"),
   fillBlankMode: document.querySelector("#fillBlankMode"),
   definitionMode: document.querySelector("#definitionMode"),
   startBtn: document.querySelector("#startBtn"),
@@ -187,7 +188,7 @@ const state = {
   streak: 0,
   selected: new Set(),
   answered: false,
-  topic: "all",
+  topics: new Set(["all"]),
   timerSeconds: 30,
   tick: null,
   timeLeft: 30,
@@ -415,7 +416,9 @@ function showOnly(screen) {
 
 function filteredBaseBank() {
   let bank = state.allQuestions;
-  if (state.topic !== "all") bank = bank.filter((q) => q.topic === state.topic || q.module === state.topic);
+  if (!state.topics.has("all")) {
+    bank = bank.filter((q) => state.topics.has(q.topic) || state.topics.has(q.module));
+  }
   return bank;
 }
 
@@ -943,14 +946,37 @@ function finishQuiz() {
   });
 }
 
-document.querySelectorAll(".topic-chip").forEach((button) => {
-  button.addEventListener("click", () => {
-    document.querySelectorAll(".topic-chip").forEach((chip) => chip.classList.remove("active"));
-    button.classList.add("active");
-    state.topic = button.dataset.topic;
+function selectedTopicValues() {
+  const values = [...els.topicSelect.selectedOptions].map((option) => option.value);
+  return values.length ? values : ["all"];
+}
+
+function syncTopicSelection() {
+  const values = selectedTopicValues();
+  const allOption = [...els.topicSelect.options].find((option) => option.value === "all");
+
+  if (values.includes("all") && values.length > 1) {
+    if (allOption) allOption.selected = false;
+    state.topics = new Set(values.filter((value) => value !== "all"));
     updateBankSize();
-  });
-});
+    return;
+  }
+
+  if (values.includes("all") || values.length === 0) {
+    [...els.topicSelect.options].forEach((option) => {
+      option.selected = option.value === "all";
+    });
+    state.topics = new Set(["all"]);
+    updateBankSize();
+    return;
+  }
+
+  if (allOption) allOption.selected = false;
+  state.topics = new Set(values);
+  updateBankSize();
+}
+
+els.topicSelect.addEventListener("change", syncTopicSelection);
 
 els.fillBlankMode.addEventListener("change", updateBankSize);
 els.definitionMode.addEventListener("change", updateBankSize);

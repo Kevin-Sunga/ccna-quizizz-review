@@ -149,14 +149,21 @@ select {
   padding: 0 14px;
 }
 
-.topic-picker {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+.topic-select-label {
   margin-bottom: 26px;
 }
 
-.topic-chip,
+.topic-select-label select {
+  width: 100%;
+  min-height: 190px;
+  padding: 10px 12px;
+  line-height: 1.45;
+}
+
+.topic-select-label option {
+  padding: 8px 10px;
+}
+
 .secondary-action {
   min-height: 42px;
   border: 1px solid var(--line);
@@ -165,11 +172,6 @@ select {
   color: var(--text);
   padding: 0 16px;
   cursor: pointer;
-}
-
-.topic-chip.active {
-  border-color: rgba(24, 211, 197, 0.8);
-  background: rgba(24, 211, 197, 0.14);
 }
 
 .mode-options {

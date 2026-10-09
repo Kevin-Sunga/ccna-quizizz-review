@@ -12,7 +12,7 @@
         <div class="brand-row">
           <div class="logo-mark">Q</div>
           <div>
-            <p class="eyebrow">CCNA Modules 6-8</p>
+            <p class="eyebrow">CCNA Modules 1-8</p>
             <h1>Quizizz-Style Review</h1>
           </div>
         </div>
@@ -46,17 +46,20 @@
               </label>
             </div>
 
-            <div class="topic-picker" aria-label="Topic filters">
-              <button class="topic-chip active" data-topic="all" type="button">All Modules</button>
-              <button class="topic-chip" data-topic="Modules 1-2" type="button">Modules 1-2</button>
-              <button class="topic-chip" data-topic="Modules 3-5" type="button">Modules 3-5</button>
-              <button class="topic-chip" data-topic="Modules 6-8" type="button">Modules 6-8</button>
-              <button class="topic-chip" data-topic="OSPF" type="button">OSPF</button>
-              <button class="topic-chip" data-topic="Security" type="button">Security</button>
-              <button class="topic-chip" data-topic="NAT" type="button">NAT</button>
-              <button class="topic-chip" data-topic="WAN" type="button">WAN</button>
-              <button class="topic-chip" data-topic="VPN" type="button">VPN</button>
-            </div>
+            <label class="topic-select-label">
+              Modules and topics
+              <select id="topicSelect" multiple size="9" aria-label="Modules and topics">
+                <option value="all" selected>All Modules</option>
+                <option value="Modules 1-2">Modules 1-2</option>
+                <option value="Modules 3-5">Modules 3-5</option>
+                <option value="Modules 6-8">Modules 6-8</option>
+                <option value="OSPF">OSPF</option>
+                <option value="Security">Security</option>
+                <option value="NAT">NAT</option>
+                <option value="WAN">WAN</option>
+                <option value="VPN">VPN</option>
+              </select>
+            </label>
 
             <div class="mode-options" aria-label="Question type options">
               <label class="mode-toggle">
