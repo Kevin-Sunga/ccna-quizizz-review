@@ -125,7 +125,7 @@ function parseHtmlQuestions(html, moduleName) {
     const question = stripTags(questionMatch[1]).replace(/^(\d+)\.\s+/, "$1. ");
     const number = Number(question.match(/^(\d+)\./)?.[1]);
     if (!number) return null;
-    const images = extractImages(block);
+    let images = extractImages(block);
     const listMatch = block.match(/<ul[^>]*>([\s\S]*?)<\/ul>/i);
     const tableMatch = block.match(/<table[^>]*>([\s\S]*?)<\/table>/i);
     const choices = [];
@@ -160,6 +160,7 @@ function parseHtmlQuestions(html, moduleName) {
     }
 
     matching = manualMatching[moduleName]?.[number] || matching;
+    if (matching) images = [];
 
     const explanationMatch = block.match(/<div class="message_box success">([\s\S]*?)(?=<p><strong>\s*\d+\.|$)/i);
     const explanation = explanationMatch ? stripTags(explanationMatch[1]).replace(/^Explanation:\s*/i, "Explanation: ") : "";

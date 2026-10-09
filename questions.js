@@ -818,9 +818,7 @@ window.QUESTION_BANK = [
         "This is where you can find the topology table.": "Link-state database"
       }
     },
-    "images": [
-      "https://itexamanswers.net/wp-content/uploads/2019/12/2024-10-09_135501.jpg"
-    ],
+    "images": [],
     "explanation": "Explanation: Topic 1.1.2\n\nDUAL is the algorithm used by EIGRP. In multiarea OSPF, OSPF is implemented using multiple areas, and all of them must be connected to the backbone area.",
     "gradable": true,
     "raw": "38. Match the description to the term. (Not all options are used.)\n\n\nExplanation: Topic 1.1.2\n\nDUAL is the algorithm used by EIGRP. In multiarea OSPF, OSPF is implemented using multiple areas, and all of them must be connected to the backbone area."
@@ -883,9 +881,7 @@ window.QUESTION_BANK = [
         "sixth state": "Loading state"
       }
     },
-    "images": [
-      "https://itexamanswers.net/wp-content/uploads/2019/12/2025-02-12_111248.jpg"
-    ],
+    "images": [],
     "explanation": "",
     "gradable": true,
     "raw": "40. Match the OSPF state with the order in which it occurs. (Not all options are used.)"
@@ -1050,9 +1046,7 @@ window.QUESTION_BANK = [
         "link-state update packet": "advertise new information"
       }
     },
-    "images": [
-      "https://itexamanswers.net/wp-content/uploads/2019/12/2024-10-09_134235.jpg"
-    ],
+    "images": [],
     "explanation": "Explanation: Topic 1.2.2",
     "gradable": true,
     "raw": "47. Match each OSPF packet type to how it is used by a router. (Not all options are used.)\n\n\nExplanation: Topic 1.2.2"
@@ -3728,9 +3722,7 @@ window.QUESTION_BANK = [
         "A multisite college wants to connect using Ethernet technology between the sites.": "MetroE"
       }
     },
-    "images": [
-      "https://itexamanswers.net/wp-content/uploads/2019/12/2020-01-21_004658.jpg"
-    ],
+    "images": [],
     "explanation": "Explanation: Topic 7.3.2",
     "gradable": true,
     "raw": "37. Match the scenario to the WAN solution. (Not all options are used.)\n\n\nExplanation: Topic 7.3.2"
@@ -3760,10 +3752,7 @@ window.QUESTION_BANK = [
         "Outside global": "203.0.113.5"
       }
     },
-    "images": [
-      "https://itexamanswers.net/wp-content/uploads/2019/12/i249830v1n1_212288-1.png",
-      "https://itexamanswers.net/wp-content/uploads/2019/12/2024-10-09_154604.jpg"
-    ],
+    "images": [],
     "explanation": "Explanation: Topic 6.1.4\n\nThe inside local address is the private IP address of the source or the PC in this instance. The inside global address is the translated address of the source or the address as seen by the outside device. Since the PC is using the outside address of the R1 router, the inside global address is 192.0.2.1. The outside addressing is simply the address of the server or 203.0.113.5.",
     "gradable": true,
     "raw": "38. Question as presented:\n\nRefer to the exhibit. The PC is sending a packet to the Server on the remote network. Router R1 is performing NAT overload. From the perspective of the PC, match the NAT address type with the correct IP address. (Not all options are used.)\n\n\nExplanation: Topic 6.1.4\n\nThe inside local address is the private IP address of the source or the PC in this instance. The inside global address is the translated address of the source or the address as seen by the outside device. Since the PC is using the outside address of the R1 router, the inside global address is 192.0.2.1. The outside addressing is simply the address of the server or 203.0.113.5."
@@ -4210,9 +4199,7 @@ window.QUESTION_BANK = [
         "devices and inside wiring located on the enterprise edge and which connect to a carrier link": "customer premises equipment"
       }
     },
-    "images": [
-      "https://itexamanswers.net/wp-content/uploads/2019/12/2024-10-09_154259.jpg"
-    ],
+    "images": [],
     "explanation": "Explanation: Topic 7.2.3",
     "gradable": true,
     "raw": "58. Match each component of a WAN connection to its description. (Not all options are used.)\n\n\nExplanation: Topic 7.2.3"
@@ -4275,9 +4262,7 @@ window.QUESTION_BANK = [
         "step 5": "R1 replaces the address 192.168.10.10 with a translated inside global address."
       }
     },
-    "images": [
-      "https://itexamanswers.net/wp-content/uploads/2019/12/Modules-6_8-WAN-Concepts-Exam-Answers.png"
-    ],
+    "images": [],
     "explanation": "Explanation: Topic 6.5.3\n\nThe translation of the IP addresses from 209.65.200.254 to 192.168.10.10 will take place when the reply comes back from the server.",
     "gradable": true,
     "raw": "60. Match the steps with the actions that are involved when an internal host with IP address 192.168.10.10 attempts to send a packet to and external server at the IP address 209.165.200.254 across a router R1 that running dynamic NAT. (Not all options are used.)\n\nPlace the options in the following order:\n\nstep 5 => R1 replaces the address 192.168.10.10 with a translated inside global address.\nstep 2 => R1 checks the NAT configuration to determine if this packet should be translated.\nstep 4 => R1 selects an available global address from the dynamic address pool.\nstep 1 => The host sends packets that request a connection to the server at the address 209.165.200.254\nstep 3 => If there is no translation entry for this IP address, R1 determines that the source address 192.168.10.10 must be translated\nExplanation: Topic 6.5.3\n\nThe translation of the IP addresses from 209.65.200.254 to 192.168.10.10 will take place when the reply comes back from the server."
@@ -4334,9 +4319,7 @@ window.QUESTION_BANK = [
         "step 5": "R1 replaces the address 192.168.10.10 with a translated inside global address."
       }
     },
-    "images": [
-      "https://itexamanswers.net/wp-content/uploads/2019/12/2024-10-09_153330.jpg"
-    ],
+    "images": [],
     "explanation": "Explanation: Topic 6.5.3\n\nThe translation of the IP addresses from 209.65.200.254 to 192.168.10.10 will take place when the reply comes back from the server.",
     "gradable": true,
     "raw": "62. Match the steps with the actions that are involved when an internal host with IP address 192.168.10.10 attempts to send a packet to an external server at the IP address 209.165.200.254 across a router R1 that is running dynamic NAT. (Not all options are used.)\n\n\nExplanation: Topic 6.5.3\n\nThe translation of the IP addresses from 209.65.200.254 to 192.168.10.10 will take place when the reply comes back from the server."
