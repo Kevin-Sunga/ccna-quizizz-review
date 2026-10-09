@@ -299,7 +299,7 @@ function topicFor(moduleName, block) {
 const questions = sources.flatMap((source) => {
   const contents = fs.readFileSync(source.file, "utf8");
   return source.file.endsWith(".html") ? parseHtmlQuestions(contents, source.module) : parsePlainQuestions(contents, source.module);
-});
+}).filter((question) => !(question.module === "Modules 1-2" && question.number === 33));
 
 fs.writeFileSync("questions.js", `window.QUESTION_BANK = ${JSON.stringify(questions, null, 2)};\n`, "utf8");
 console.log(`Wrote ${questions.length} questions`);

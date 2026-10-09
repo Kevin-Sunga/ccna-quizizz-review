@@ -657,19 +657,6 @@ window.QUESTION_BANK = [
     "raw": "32. What is the format of the router ID on an OSPF-enabled router?\n\na unique router host name that is configured on the router\na unique phrase with no more than 16 characters\na 32-bit number formatted like an IPv4 address\nan 8-bit number with a decimal value between 0 and 255\na character string with no space\nExplanation: Topic 2.1.3\n\nA router ID is a 32-bit number formatted like an IPv4 address and assigned in order to uniquely identify a router among OSPF peers."
   },
   {
-    "id": "Modules 1-2-33",
-    "module": "Modules 1-2",
-    "number": 33,
-    "topic": "OSPF",
-    "question": "33. Question as presented:",
-    "choices": [],
-    "answers": [],
-    "matching": null,
-    "explanation": "Explanation: Topic 1.1.4",
-    "gradable": false,
-    "raw": "33. Question as presented:\n\n\nExplanation: Topic 1.1.4"
-  },
-  {
     "id": "Modules 1-2-34",
     "module": "Modules 1-2",
     "number": 34,
